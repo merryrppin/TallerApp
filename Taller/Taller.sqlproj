@@ -71,7 +71,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\2-Postdeployment\Postdeployment.sql" />
-    <None Include="Schema Objects\Schemas\param.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Schema Objects\Schemas\param\Tables\tblFieldValueType.sql" />
@@ -84,5 +83,6 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblUserSession.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetActiveMenus.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetLoginData.sql" />
+    <Build Include="Schema Objects\Schemas\param\param.sql" />
   </ItemGroup>
 </Project>

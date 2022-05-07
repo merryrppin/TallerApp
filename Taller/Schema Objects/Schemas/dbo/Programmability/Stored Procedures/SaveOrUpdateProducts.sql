@@ -3,7 +3,7 @@
 AS
 
 	SELECT id,code,[name],[type],stock_control,active,tax_incluided,taxes,available_quantity
-	--INTO #tmpProducts
+	INTO #tmpProducts
 	FROM OPENJSON(@JsonProduct)
 	WITH ( id uniqueidentifier '$.id',
 	code VARCHAR(20) '$.code',

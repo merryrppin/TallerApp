@@ -1,0 +1,41 @@
+﻿<div class="kt-portlet__head">
+    <div class="kt-portlet__head-label">
+        <h3 class="kt-portlet__head-title">{{userIdSelected == -1 ? aLanguage.addUser : aLanguage.editUser}}</h3>
+        {{currentUser.UserFirstName}} {{currentUser.UserLastName}}
+    </div>
+</div>
+
+<form class="kt-form kt-form--label-right" autocomplete="off" ng-submit="saveUser()" id="frmUser">
+    <div class="kt-portlet__body">
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>{{aLanguage.name}}*:</label>
+                <input data-ng-model="currentUser.UserFirstName" id="userFirstName" name="userFirstName" type="text" class="form-control" placeholder="{{aLanguage.enterName}}">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>{{aLanguage.surnames}}*:</label>
+                <input data-ng-model="currentUser.UserLastName" type="text" id="userLastName" name="userLastName" class="form-control" placeholder="{{aLanguage.enterSurnames}}">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>{{aLanguage.email}}*:</label>
+                <input data-ng-model="currentUser.UserEmail" type="email" id="email" name="email" class="form-control" placeholder="{{aLanguage.enterEmail}}">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>{{aLanguage.username}}*:</label>
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="la la-user"></i></span></div>
+                    <input data-ng-model="currentUser.Login" type="text" id="login" name="login" class="form-control" placeholder="">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label class="">{{aLanguage.password}}*:</label>
+                <input data-ng-model="currentUser.Password" type="password" id="password1" name="password1" class="form-control" placeholder="{{aLanguage.enterPassword}}" autocomplete="new-password">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label class="">{{aLanguage.repeatPassword}}*:</label>
+                <input data-ng-model="currentUser.Password2" type="password" id="password2" name="password2" class="form-control" placeholder="{{aLanguage.enterRepeatPassword}}">
+            </div>
+
+        </div>
+    </div>
+</form>

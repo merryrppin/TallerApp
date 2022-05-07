@@ -3,7 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32126.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{1CF61524-1C0B-48BD-87C0-6E829A7EA081}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Web", "1. Web", "{C775F5EF-BA8D-4646-8D02-BD49C076B8DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Services", "2. Services", "{104A72EF-C83F-4CD4-A3F5-A4534201DA77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Data", "3. Data", "{76FC2587-0E27-4518-8FE4-A2464F1A1EBE}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Taller", "Taller\Taller.sqlproj", "{278E2001-08A8-4334-84FD-4EFFC070C9E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{6421BD56-66B5-461F-B401-849615B5DC57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{20AC542F-0C65-499B-9038-32C07306B61C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TallerWeb", "TallerWeb\TallerWeb.csproj", "{7AC9BC69-D72E-4FFF-8C06-D828D1524F65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +23,33 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1CF61524-1C0B-48BD-87C0-6E829A7EA081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1CF61524-1C0B-48BD-87C0-6E829A7EA081}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1CF61524-1C0B-48BD-87C0-6E829A7EA081}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1CF61524-1C0B-48BD-87C0-6E829A7EA081}.Release|Any CPU.Build.0 = Release|Any CPU
+		{278E2001-08A8-4334-84FD-4EFFC070C9E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{278E2001-08A8-4334-84FD-4EFFC070C9E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{278E2001-08A8-4334-84FD-4EFFC070C9E5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{278E2001-08A8-4334-84FD-4EFFC070C9E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{278E2001-08A8-4334-84FD-4EFFC070C9E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{278E2001-08A8-4334-84FD-4EFFC070C9E5}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6421BD56-66B5-461F-B401-849615B5DC57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6421BD56-66B5-461F-B401-849615B5DC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6421BD56-66B5-461F-B401-849615B5DC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6421BD56-66B5-461F-B401-849615B5DC57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20AC542F-0C65-499B-9038-32C07306B61C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AC542F-0C65-499B-9038-32C07306B61C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20AC542F-0C65-499B-9038-32C07306B61C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20AC542F-0C65-499B-9038-32C07306B61C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AC9BC69-D72E-4FFF-8C06-D828D1524F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AC9BC69-D72E-4FFF-8C06-D828D1524F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AC9BC69-D72E-4FFF-8C06-D828D1524F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AC9BC69-D72E-4FFF-8C06-D828D1524F65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{278E2001-08A8-4334-84FD-4EFFC070C9E5} = {76FC2587-0E27-4518-8FE4-A2464F1A1EBE}
+		{6421BD56-66B5-461F-B401-849615B5DC57} = {104A72EF-C83F-4CD4-A3F5-A4534201DA77}
+		{20AC542F-0C65-499B-9038-32C07306B61C} = {76FC2587-0E27-4518-8FE4-A2464F1A1EBE}
+		{7AC9BC69-D72E-4FFF-8C06-D828D1524F65} = {C775F5EF-BA8D-4646-8D02-BD49C076B8DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91B336F6-44D0-4D05-86D5-8B72BCD0DF11}

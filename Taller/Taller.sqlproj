@@ -84,5 +84,13 @@
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetActiveMenus.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetLoginData.sql" />
     <Build Include="Schema Objects\Schemas\param\param.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProducts.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblCustomers.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblCities.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblTypeIdentification.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblFiscalResponsabilities.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Taller.refactorlog" />
   </ItemGroup>
 </Project>

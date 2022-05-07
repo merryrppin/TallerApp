@@ -5,6 +5,7 @@ function listProductsController($scope, $location, GeneralService) {
 
     GeneralService.hideGeneralButtons();
 
+    $scope.aLanguage = aLanguage;
     $scope.columnDefs = [
         { headerName: 'Codigo', field: "code" },
         { headerName: 'Nombre', field: "name" },
@@ -41,7 +42,7 @@ function listProductsController($scope, $location, GeneralService) {
             data: dataSP,
             success: function (response) {
                 if (response.Exception === null) {
-                    $scope.listProductsGrid.api.setRowData(response);
+                    $scope.listProductsGrid.api.setRowData(response.Value[0].DataMapped);
                     
                 }
             }

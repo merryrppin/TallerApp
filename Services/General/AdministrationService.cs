@@ -140,6 +140,7 @@ namespace Services.General
                                     await LoginSiigoAsync(loginResp);
                                 }
                                 await LoadProductsSiigo(loginResp);
+                                await LoadCustomersSiigo(loginResp);
                             }
                         }
                     }
@@ -202,6 +203,34 @@ namespace Services.General
                 StoredProcedureName = "SaveOrUpdateProducts",
                 StoredParams = new List<StoredParams> {
                     new StoredParams {Name = "JsonProduct", Value = JsonProduct }
+                }
+            };
+            ExecuteStoredProcedure(StoredObjectParams);
+        }
+        private async Task LoadCustomersSiigo(LoginEntity loginResp)
+        {
+            string JsonCustomers = "";
+            string url = string.Format("{0}v1/customers", UrlSiigo);
+            HttpClient client = new HttpClient();
+
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/customers"))
+            {
+                client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
+                using (HttpContent content = request.Content)
+                {
+                    HttpResponseMessage response = (await client.GetAsync(url));
+                    string contents = await response.Content.ReadAsStringAsync();
+                    ResultSiigoEntity objCustomers = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
+
+                    JsonCustomers = JsonConvert.SerializeObject(objCustomers.results);
+                }
+            }
+
+            StoredObjectParams StoredObjectParams = new StoredObjectParams
+            {
+                StoredProcedureName = "SaveOrUpdateCustomers",
+                StoredParams = new List<StoredParams> {
+                    new StoredParams {Name = "JsonCustomers", Value = JsonCustomers }
                 }
             };
             ExecuteStoredProcedure(StoredObjectParams);

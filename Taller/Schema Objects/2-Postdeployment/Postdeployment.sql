@@ -20,3 +20,8 @@ SET IDENTITY_INSERT [param].[tblMenu] OFF
 
 --[dbo].[tblUser]
 INSERT INTO [dbo].[tblUsers](UserFirstName, UserLastName, UserEmail, Login, Password) VALUES('Wilmar', 'González', 'wilmar.gonzalez.franco@hotmail.com', 'wgonzalez', 'd2dvbnphbGV6');
+
+
+--[param].[tblSessionSiigo]
+INSERT INTO [param].[tblSessionSiigo] ([id], [usuario], [accesskey])
+VALUES (NEWID(), 'catalina.causil@agroequiposalpujarra.com', 'Y2UwNjU2NjYtM2E5ZC00MGJkLTllYWItZGFmMThkYzRlOTM5Ojh6TDYjQywlbUM=');

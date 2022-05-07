@@ -2,6 +2,8 @@
 function GeneralService($http, $rootScope, $window) {
     var generalService = {};
 
+    var urlSiigo = "https://api.siigo.com/";
+
     generalService.autentication = { isAuthenticated: false, showPanel: false };
     generalService.userLogin = null;
     generalService.selectedLanguage = "es";//TODO: Valor por defecto
@@ -78,6 +80,14 @@ function GeneralService($http, $rootScope, $window) {
                 type: 'error'
             });
         };
+    };
+
+    generalService.getSiigo = function (urlGet) {
+        var options = {
+            url: urlSiigo + urlGet,
+            method: 'GET'
+        }
+        generalService.executeAjax(options);
     };
 
     generalService.showToastR = function (data) {

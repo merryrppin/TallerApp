@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[tblCities]
 (
-	[id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+	[id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(), 
     [citycode] INT NOT NULL, 
     [cityname] VARCHAR(100) NOT NULL, 
     [statecode] INT NOT NULL, 

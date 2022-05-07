@@ -19,7 +19,7 @@ INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId
 SET IDENTITY_INSERT [param].[tblMenu] OFF
 
 --[erp].[dbo].[tblUser]
-INSERT INTO [erp].[dbo].[tblUsers](UserFirstName, UserLastName, UserEmail, Login, Password) VALUES('Wilmar', 'González', 'wilmar.gonzalez.franco@hotmail.com', 'wgonzalez', 'd2dvbnphbGV6');
+INSERT INTO [dbo].[tblUsers](UserFirstName, UserLastName, UserEmail, Login, Password) VALUES('Wilmar', 'González', 'wilmar.gonzalez.franco@hotmail.com', 'wgonzalez', 'd2dvbnphbGV6');
 
 INSERT INTO tblFiscalResponsibilities (code,[name])
 VALUES ('R-99-PN','No Aplica - Otros*'),
@@ -1167,3 +1167,7 @@ VALUES('13','Cédula de ciudadanía'),
 ('21','Tarjeta de extranjería'),
 ('12','Tarjeta de identidad')
 
+
+--[param].[tblSessionSiigo]
+INSERT INTO [param].[tblSessionSiigo] ([id], [usuario], [accesskey])
+VALUES (NEWID(), 'catalina.causil@agroequiposalpujarra.com', 'Y2UwNjU2NjYtM2E5ZC00MGJkLTllYWItZGFmMThkYzRlOTM5Ojh6TDYjQywlbUM=');

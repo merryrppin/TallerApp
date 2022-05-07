@@ -1,4 +1,6 @@
-﻿using Services.General.Entities.LoginEntities;
+﻿using Newtonsoft.Json;
+using Services.General.Entities.LoginEntities;
+using Services.General.Entities.SiigoEntities;
 using Services.General.Entities.StoredEntities;
 using Services.Secure;
 using System;
@@ -7,6 +9,11 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using static Services.General.Enums.Enums;
 
 namespace Services.General
@@ -15,11 +22,13 @@ namespace Services.General
     {
         private ManageExceptions ManageExceptions;
         private string ConnString;
+        private string UrlSiigo;
 
         public AdministrationService()
         {
             ManageExceptions = new ManageExceptions();
             ConnString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
+            UrlSiigo = ConfigurationManager.AppSettings["UrlSiigo"].ToString();
         }
 
         #region Stored Procedure
@@ -91,7 +100,7 @@ namespace Services.General
         }
         #endregion
         #region User
-        public LoginEntity Login(string login, string password)
+        public async Task<LoginEntity> LoginAsync(string login, string password)
         {
             LoginEntity loginResp = new LoginEntity();
             string passwordEncrypted = Encode_Decode.Encrypt(password);
@@ -119,8 +128,18 @@ namespace Services.General
                                     UserId = Convert.ToInt32(firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserId")].ToString()),
                                     UserFirstName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserFirstName")].ToString(),
                                     UserLastName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserLastName")].ToString(),
-                                    UserCompleteName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserCompleteName")].ToString()
+                                    UserCompleteName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserCompleteName")].ToString(),
+                                    usuariosiigo = firstRowUser.ItemArray[dtUser.Columns.IndexOf("usuariosiigo")].ToString(),
+                                    accesskey = firstRowUser.ItemArray[dtUser.Columns.IndexOf("accesskey")].ToString(),
+                                    access_token = firstRowUser.ItemArray[dtUser.Columns.IndexOf("accesstoken")].ToString(),
+                                    daydiff = firstRowUser.ItemArray[dtUser.Columns.IndexOf("daydiff")].ToString()
                                 };
+
+                                if (string.IsNullOrEmpty(loginResp.daydiff) || Convert.ToInt32(loginResp.daydiff) > 0)
+                                {
+                                    await LoginSiigoAsync(loginResp);
+                                }
+                                await LoadProductsSiigo(loginResp);
                             }
                         }
                     }
@@ -129,10 +148,64 @@ namespace Services.General
             return loginResp;
         }
 
-        /// <summary>
-        /// Este metodo devuelve todos los usuarios activos
-        /// </summary>
-        /// <returns></returns>
+        private async Task LoginSiigoAsync(LoginEntity loginResp)
+        {
+            Dictionary<string, string> values = new Dictionary<string, string> { { "username", loginResp.usuariosiigo }, { "access_key", loginResp.accesskey } };
+            string url = string.Format("{0}auth", UrlSiigo);
+            HttpClient client = new HttpClient();
+
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "auth"))
+            {
+                request.Content = new StringContent(JsonConvert.SerializeObject(values), Encoding.UTF8, "application/json");
+                using (HttpContent content = request.Content)
+                {
+                    HttpResponseMessage response = (await client.PostAsync(url, content));
+                    string contents = await response.Content.ReadAsStringAsync();
+                    LoginEntity loginEntityFromSiigo = Newtonsoft.Json.JsonConvert.DeserializeObject<LoginEntity>(contents);
+                    loginResp.access_token = loginEntityFromSiigo.access_token;
+                    loginResp.creationdatetoken = DateTime.Now;
+                }
+            }
+
+            StoredObjectParams StoredObjectParams = new StoredObjectParams
+            {
+                StoredProcedureName = "UpdateSessionSiigo",
+                StoredParams = new List<StoredParams> {
+                    new StoredParams {Name = "accesstoken", Value = loginResp.access_token },
+                    new StoredParams {Name = "creationdatetoken", Value = loginResp.creationdatetoken.ToString("yyyy-MM-dd")}
+                }
+            };
+            ExecuteStoredProcedure(StoredObjectParams);
+        }
+
+        private async Task LoadProductsSiigo(LoginEntity loginResp)
+        {
+            string JsonProduct = "";
+            string url = string.Format("{0}v1/products", UrlSiigo);
+            HttpClient client = new HttpClient();
+
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/products"))
+            {
+                client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
+                using (HttpContent content = request.Content)
+                {
+                    HttpResponseMessage response = (await client.GetAsync(url));
+                    string contents = await response.Content.ReadAsStringAsync();
+                    ResultSiigoEntity objProducts = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
+
+                    JsonProduct = JsonConvert.SerializeObject(objProducts.results);
+                }
+            }
+
+            StoredObjectParams StoredObjectParams = new StoredObjectParams
+            {
+                StoredProcedureName = "SaveOrUpdateProducts",
+                StoredParams = new List<StoredParams> {
+                    new StoredParams {Name = "JsonProduct", Value = JsonProduct }
+                }
+            };
+            ExecuteStoredProcedure(StoredObjectParams);
+        }
         #endregion
     }
 }

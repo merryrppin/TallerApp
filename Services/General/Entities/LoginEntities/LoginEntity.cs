@@ -1,4 +1,6 @@
-﻿namespace Services.General.Entities.LoginEntities
+﻿using System;
+
+namespace Services.General.Entities.LoginEntities
 {
     public class LoginEntity
     {
@@ -12,5 +14,10 @@
         public string CompanyName { get; set; }
         public string Country { get; set; }
         public string NIT { get; set; }
+        public string usuariosiigo { get; set; }
+        public string accesskey { get; set; }
+        public string access_token { get; set; }
+        public string daydiff { get; set; }
+        public DateTime creationdatetoken { get; set; }
     }
 }

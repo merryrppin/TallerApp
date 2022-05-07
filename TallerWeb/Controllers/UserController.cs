@@ -1,6 +1,7 @@
 ﻿using Data.General.Entities;
 using Services.General;
 using Services.General.Entities.LoginEntities;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Web.Controllers
@@ -15,9 +16,9 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("api/login")]
-        public LoginEntity Login(LoginEntity loginEntity)
+        public async Task<LoginEntity> LoginAsync(LoginEntity loginEntity)
         {
-            return _administrationService.Login(loginEntity.login, loginEntity.password);
+            return await _administrationService.LoginAsync(loginEntity.login, loginEntity.password);
         }
     }
 }

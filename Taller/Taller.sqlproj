@@ -89,6 +89,8 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblCities.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblTypeIdentification.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblFiscalResponsabilities.sql" />
+    <Build Include="Schema Objects\Schemas\param\Tables\tblSessionSiigo.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\UpdateSessionSiigo.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\SaveOrUpdateProducts.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\SaveOrUpdateCustomers.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetProducts.sql" />

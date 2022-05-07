@@ -111,22 +111,15 @@ namespace Services.General
                         {
                             sda.Fill(ds);
                             DataTable dtUser = ds.Tables[0];
-                            DataTable dtCompany = ds.Tables[1];
                             if (dtUser.Rows.Count > 0)
                             {
                                 DataRow firstRowUser = dtUser.Rows[0];
-                                DataRow firstRowCompany = dtCompany.Rows[0];
                                 loginResp = new LoginEntity
                                 {
                                     UserId = Convert.ToInt32(firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserId")].ToString()),
                                     UserFirstName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserFirstName")].ToString(),
                                     UserLastName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserLastName")].ToString(),
-                                    UserCompleteName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserCompleteName")].ToString(),                                    
-                                    //Info tblCompanies
-                                    CompanyId = Convert.ToInt32(firstRowCompany.ItemArray[dtCompany.Columns.IndexOf("CompanyId")].ToString()),
-                                    CompanyName = firstRowCompany.ItemArray[dtCompany.Columns.IndexOf("CompanyName")].ToString(),
-                                    Country = firstRowCompany.ItemArray[dtCompany.Columns.IndexOf("Country")].ToString(),
-                                    NIT = firstRowCompany.ItemArray[dtCompany.Columns.IndexOf("NIT")].ToString(),
+                                    UserCompleteName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserCompleteName")].ToString()
                                 };
                             }
                         }

@@ -180,6 +180,7 @@ namespace Services.General
 
         private async Task LoadProductsSiigo(LoginEntity loginResp)
         {
+            string JsonProduct = "";
             string url = string.Format("{0}v1/products", UrlSiigo);
             HttpClient client = new HttpClient();
 
@@ -192,19 +193,18 @@ namespace Services.General
                     string contents = await response.Content.ReadAsStringAsync();
                     ResultSiigoEntity objProducts = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
 
-                    string results = JsonConvert.SerializeObject(objProducts.results);
+                    JsonProduct = JsonConvert.SerializeObject(objProducts.results);
                 }
             }
 
-            //StoredObjectParams StoredObjectParams = new StoredObjectParams
-            //{
-            //    StoredProcedureName = "SaveOrUpdateProducts",
-            //    StoredParams = new List<StoredParams> {
-            //        new StoredParams {Name = "accesstoken", Value = loginResp.access_token },
-            //        new StoredParams {Name = "creationdatetoken", Value = loginResp.creationdatetoken.ToString("yyyy-MM-dd")}
-            //    }
-            //};
-            //ExecuteStoredProcedure(StoredObjectParams);
+            StoredObjectParams StoredObjectParams = new StoredObjectParams
+            {
+                StoredProcedureName = "SaveOrUpdateProducts",
+                StoredParams = new List<StoredParams> {
+                    new StoredParams {Name = "JsonProduct", Value = JsonProduct }
+                }
+            };
+            ExecuteStoredProcedure(StoredObjectParams);
         }
         #endregion
     }

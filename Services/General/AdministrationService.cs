@@ -176,7 +176,11 @@ namespace Services.General
                     new StoredParams {Name = "creationdatetoken", Value = loginResp.creationdatetoken.ToString("yyyy-MM-dd")}
                 }
             };
-            ExecuteStoredProcedure(StoredObjectParams);
+            StoredObjectResponse StoredObjectResponse = ExecuteStoredProcedure(StoredObjectParams);
+            if (StoredObjectResponse.Exception != null)
+            {
+                throw StoredObjectResponse.Exception;
+            }
         }
 
         private async Task LoadProductsSiigo(LoginEntity loginResp)
@@ -205,7 +209,12 @@ namespace Services.General
                     new StoredParams {Name = "JsonProduct", Value = JsonProduct }
                 }
             };
-            ExecuteStoredProcedure(StoredObjectParams);
+
+            StoredObjectResponse StoredObjectResponse = ExecuteStoredProcedure(StoredObjectParams);
+            if (StoredObjectResponse.Exception != null)
+            {
+                throw StoredObjectResponse.Exception;
+            }
         }
         private async Task LoadCustomersSiigo(LoginEntity loginResp)
         {
@@ -233,7 +242,12 @@ namespace Services.General
                     new StoredParams {Name = "JsonCustomers", Value = JsonCustomers }
                 }
             };
-            ExecuteStoredProcedure(StoredObjectParams);
+
+            StoredObjectResponse StoredObjectResponse = ExecuteStoredProcedure(StoredObjectParams);
+            if (StoredObjectResponse.Exception != null)
+            {
+                throw StoredObjectResponse.Exception;
+            }
         }
         #endregion
     }

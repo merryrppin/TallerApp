@@ -18,7 +18,11 @@ function generalController($scope, $rootScope, $timeout, $filter, $location, Ses
     
     $rootScope.$broadcast('restorestate');
     GeneralService.userLogin = SessionService.model;
+    
     ctrl.userLogin = GeneralService.userLogin;
+    if (moment(ctrl.userLogin.creationdatetoken).diff(new Date(), 'hours') > 16) {
+        ctrl.signOut();
+    }
 
     ctrl.autentication = GeneralService.autentication;//false por defecto
 
@@ -127,6 +131,9 @@ function generalController($scope, $rootScope, $timeout, $filter, $location, Ses
         }, 500);
     };
 
+    ctrl.aCurrentMenu = {};
+    ctrl.aCurrentParentMenu = {};
+
     ctrl.extractFromUrl = function () {
         ctrl.currentMenuIdByLevel = [];
         ctrl.loadAllLevels();
@@ -137,11 +144,13 @@ function generalController($scope, $rootScope, $timeout, $filter, $location, Ses
         var aCurrentMenu = $filter('filter')(ctrl.allMenus, { 'Url': ctrl.currentUrl }, true);
         if (aCurrentMenu.length > 0) {
             var objCurrentMenu = angular.copy(aCurrentMenu[0]);
+            ctrl.aCurrentMenu = angular.copy(aCurrentMenu[0]);
             ctrl.currentMenuIdByLevel[parseInt(objCurrentMenu.Level)] = objCurrentMenu.MenuId;
             if (objCurrentMenu.ParentMenuId !== "") {
                 var aCurrentParentMenu = $filter('filter')(ctrl.allMenus, { 'MenuId': objCurrentMenu.ParentMenuId }, true);
                 if (aCurrentParentMenu.length > 0) {
                     var objCurrentParentMenu = angular.copy(aCurrentParentMenu[0]);
+                    ctrl.aCurrentParentMenu = angular.copy(aCurrentParentMenu[0]);
                     ctrl.currentMenuIdByLevel[parseInt(objCurrentParentMenu.Level)] = objCurrentParentMenu.MenuId;
                     if (objCurrentParentMenu.ParentMenuId !== "") {
                         var aCurrentLastParentMenu = $filter('filter')(ctrl.allMenus, { 'MenuId': objCurrentParentMenu.ParentMenuId }, true);

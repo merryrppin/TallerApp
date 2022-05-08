@@ -64,16 +64,21 @@
                                 <div class="row kt-login__extra">
                                     <div class="col">
                                         <label class="kt-checkbox">
-                                            <input type="checkbox" name="remember"> {{aLanguage.remember_me}}
+                                            <input type="checkbox" data-ng-model="LoginEntity.rememberLogin" name="remember"> {{aLanguage.remember_me}}
                                             <span></span>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="kt-login__actions">
-                                    <button id="kt_login_signin_submit" class="btn btn-brand btn-pill kt-login__btn-primary" type="button" data-ng-click="loginUser()">
+                                    <button ng-if="!loading" id="kt_login_signin_submit" class="btn btn-brand btn-pill kt-login__btn-primary" type="button" data-ng-click="loginUser()">
                                         {{aLanguage.sign_in}}
                                     </button>
+                                    <button ng-if="loading" id="kt_login_signin_submit" class="btn btn-brand btn-pill kt-login__btn-primary" type="button" disabled>
+                                        <span style="vertical-align: middle;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        Cargando...
+                                    </button>
                                 </div>
+
                             </form>
                         </div>
                     </div>

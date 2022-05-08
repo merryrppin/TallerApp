@@ -5,15 +5,15 @@ AS
 	SELECT id,code,[name],[type],stock_control,active,tax_incluided,taxes,available_quantity
 	INTO #tmpProducts
 	FROM OPENJSON(@JsonProduct)
-	WITH ( id uniqueidentifier '$.id',
+	WITH ( id UNIQUEIDENTIFIER '$.id',
 	code VARCHAR(20) '$.code',
 	[name] VARCHAR(100),
-	[type] varchar(50),
-	stock_control bit '$.stock_control',
-	active bit '$.active',
-	tax_incluided bit '$.tax_included',
-	taxes NVARCHAR(MAX) '$.taxes',
-	available_quantity decimal(18,8) '$.available_quantity')
+	[type] VARCHAR(50),
+	stock_control BIT '$.stock_control',
+	active BIT '$.active',
+	tax_incluided BIT '$.tax_included',
+	taxes NVARCHAR(MAX) AS JSON,
+	available_quantity DECIMAL(18,8) '$.available_quantity')
 
 	MERGE tblProducts AS tblP
 	USING (SELECT * FROM #tmpProducts) AS SOURCE

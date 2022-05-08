@@ -18,6 +18,7 @@ INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId
 
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(13,'Productos','','flaticon2-box',NULL,400,1,'',0);
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(14,'Lista productos','','',13,100,1,'#!/listProducts',1);
+INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(15,'Clientes','','',5,100,1,'#!/addCustomerss',1);
 
 SET IDENTITY_INSERT [param].[tblMenu] OFF
 

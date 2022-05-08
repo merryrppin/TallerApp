@@ -7,14 +7,48 @@ function listProductsController($scope, $location, GeneralService) {
 
     $scope.aLanguage = aLanguage;
     $scope.columnDefs = [
-        { headerName: 'Codigo', field: "code" },
-        { headerName: 'Nombre', field: "name" },
-        { headerName: 'Tipo', field: "type" },
-        { headerName: 'Control Stock', field: "stock_control" },
-        { headerName: 'Activo', field: "active" },
-        { headerName: 'Incluye Impuesto', field: "tax_incluided" },
-        { headerName: 'Impuestos', field: "taxes" },
-        { headerName: 'Cantidad Disponible', field: "available_quantity" }
+        { headerName: 'Codigo', field: "code", width: 110},
+        { headerName: 'Nombre', field: "name", width: 315},
+        { headerName: 'Tipo', field: "type", width: 110},
+        {
+            headerName: 'Control Stock', field: "stock_control", width: 140, editable: false, cellStyle: { "text-align": "Center" }, cellRenderer: function (row) {
+                let html = "";
+                if (row.data.stock_control == "True") {
+                    html += "<i class='kt - menu__link - icon flaticon2-check-mark'></i>"
+                }
+                else {
+                    html += "<i class='kt - menu__link - flaticon2-cross'></i>"
+                }
+                
+                return html;
+            }},
+        {
+            headerName: 'Activo', field: "active", width: 120, editable: false, cellStyle: { "text-align": "Center" }, cellRenderer: function (row) {
+                let html = "";
+                if (row.data.active == "True") {
+                    html += "<i class='kt - menu__link - icon flaticon2-check-mark'></i>"
+                }
+                else {
+                    html += "<i class='kt - menu__link - flaticon2-cross'></i>"
+                }
+
+                return html;
+            }
+        },
+        {
+            headerName: 'Incluye Impuesto', field: "tax_incluided", width: 150, editable: false, cellStyle: { "text-align": "Center" }, cellRenderer: function (row) {
+                let html = "";
+                if (row.data.tax_incluided == "True") {
+                    html += "<i class='kt - menu__link - icon flaticon2-check-mark'></i>"
+                }
+                else {
+                    html += "<i class='kt - menu__link - flaticon2-cross'></i>"
+                }
+
+                return html;
+            } },
+        { headerName: 'Impuestos', field: "taxes",width: 120 },
+        { headerName: 'Cantidad Disponible', field: "available_quantity", width: 170 }
     ];
 
     $scope.rowData = [];
@@ -42,7 +76,9 @@ function listProductsController($scope, $location, GeneralService) {
             data: dataSP,
             success: function (response) {
                 if (response.Exception === null) {
-                    $scope.listProductsGrid.api.setRowData(response.Value[0].DataMapped);
+                    let data = response.Value[0].DataMapped;
+                    data.taxes = data.taxes == null ? data.taxes:JSON.parse(data.taxes);
+                    $scope.listProductsGrid.api.setRowData(data);
                     
                 }
             }

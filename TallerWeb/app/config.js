@@ -171,6 +171,21 @@
                 }]
             }
         })
+        .state('addCustomers', {
+            url: "/addCustomers",
+            templateUrl: "app/modules/general/customers/addCustomers.html",
+            controller: "addCustomersController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: aLanguage.appName,
+                        files: [
+                            'app/modules/general/customers/customersCtrl.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('404', {
             url: "/404",
             templateUrl: "app/modules/general/error/404.html",

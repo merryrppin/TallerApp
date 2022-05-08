@@ -3,25 +3,25 @@
 AS
 
 	SELECT id,[type],person_type,id_type,identification,branch_office,check_digit,[name],comercial_name,
-	active,vat_responsible,fiscal_responsibilities,address,phones,contacts,comments
+	active,vat_responsible,fiscal_responsibilities,[address],phones,contacts,comments
 	INTO #tmpCustomers
 	FROM OPENJSON(@JsonCustomers)
-	WITH ( id uniqueidentifier '$.id',
-	[type] varchar(50) '$.type',
-	person_type varchar(50) '$.person_type',
-	id_type NVARCHAR(MAX) '$.id_type',
-	identification BIGINT '$.identification',
-	branch_office int '$.branch_office',
-	check_digit int '$.check_digit',
-	[name] NVARCHAR(MAX) '$.name',
-	comercial_name VARCHAR(100) '$.comercial_name',
-	active bit '$.active',
-	vat_responsible bit '$.vat_responsible',
-	fiscal_responsibilities NVARCHAR(MAX) '$.fiscal_responsibilities',
-	address NVARCHAR(MAX) '$.address',
-	phones NVARCHAR(MAX) '$.phones',
-	contacts NVARCHAR(MAX) '$.contacts',
-	comments NVARCHAR(MAX) '$.comments')
+	WITH ( id UNIQUEIDENTIFIER '$.id',
+		[type] VARCHAR(50) '$.type',
+		person_type VARCHAR(50) '$.person_type',
+		id_type NVARCHAR(MAX) AS JSON,
+		identification BIGINT '$.identification',
+		branch_office INT '$.branch_office',
+		check_digit INT '$.check_digit',
+		[name] NVARCHAR(MAX) AS JSON,
+		comercial_name VARCHAR(100) '$.comercial_name',
+		active BIT '$.active',
+		vat_responsible BIT '$.vat_responsible',
+		fiscal_responsibilities NVARCHAR(MAX) AS JSON,
+		[address] NVARCHAR(MAX) AS JSON,
+		phones NVARCHAR(MAX) AS JSON,
+		contacts NVARCHAR(MAX) AS JSON,
+		comments NVARCHAR(MAX) AS JSON)
 
 	MERGE tblCustomers AS tblc
 	USING (SELECT * FROM #tmpCustomers) AS SOURCE
@@ -44,10 +44,10 @@ AS
 					comments = SOURCE.comments
 	WHEN NOT MATCHED THEN 
 		INSERT (id ,[type],person_type,id_type,identification,branch_office,check_digit,[name],comercial_name,active,
-					vat_responsible,fiscal_responsibilities,address,phones,contacts,comments )
+					vat_responsible,fiscal_responsibilities,[address],phones,contacts,comments )
 		VALUES (SOURCE.id ,SOURCE.[type] ,
 					SOURCE.person_type ,SOURCE.id_type ,SOURCE.identification,SOURCE.branch_office ,SOURCE.check_digit ,SOURCE.[name],SOURCE.comercial_name,SOURCE.active ,SOURCE.vat_responsible ,
-					SOURCE.fiscal_responsibilities,SOURCE.address,SOURCE.phones ,SOURCE.contacts ,SOURCE.comments);
+					SOURCE.fiscal_responsibilities,SOURCE.[address],SOURCE.phones ,SOURCE.contacts ,SOURCE.comments);
 
 
 GO

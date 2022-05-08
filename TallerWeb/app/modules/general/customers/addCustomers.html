@@ -16,17 +16,18 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <select class="form-control" name="option">
+                            <select class="form-control" name="option" ng-model="Customers.id_type">
                                 <option value="" disabled selected>Tipo Identificación</option>
-                                <option>Cedula Ciudadania</option>
-                                <option>Nit</option>
+                                <option ng-repeat="typeIdentification in listTypeIdentification" ng-value="typeIdentification">{{typeIdentification.name}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" name="email" placeholder="Identificacion" />
-
+                        <div class="col-lg-9 col-md-9 col-sm-9">
+                            <input type="text" class="form-control" name="identification" placeholder="Identificacion" ng-model="Customers.identification" ng-change="checkDigit()" />
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3">
+                            <input type="text" class="form-control" name="dv" placeholder="DV" disabled ng-model="Customers.check_digit" />
                         </div>
                     </div>
                 </div>

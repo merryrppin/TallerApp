@@ -1,4 +1,5 @@
 ﻿<div class="row">
+    <input type="button" value="Guardar" ng-click="saveCustomer()" />
     <div class="col-lg-12 form-group row">
         <div class="col-lg-6">
             <h3>Datos Básicos</h3>
@@ -7,10 +8,10 @@
                     <label class="col-form-label text-left col-lg-12 col-sm-12">Tipo *</label>
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <select class="form-control" name="option">
+                            <select class="form-control" name="option" ng-model="Customers.person_type">
                                 <option value="" disabled selected>Tipo</option>
-                                <option>Other</option>
-                                <option>Customer</option>
+                                <option value="Person">Es persona</option>
+                                <option value="Company">Es Empresa</option>
                             </select>
                         </div>
                     </div>
@@ -18,7 +19,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <select class="form-control" name="option" ng-model="Customers.id_type">
                                 <option value="" disabled selected>Tipo Identificación</option>
-                                <option ng-repeat="typeIdentification in listTypeIdentification" ng-value="typeIdentification">{{typeIdentification.name}}</option>
+                                <option ng-repeat="typeIdentification in listTypeIdentification" ng-value="typeIdentification.code">{{typeIdentification.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -35,25 +36,25 @@
                     <label class="col-form-label text-left col-lg-12 col-sm-12" style="color:white;">Tipo</label>
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" name="email" placeholder="Nombres" />
+                            <input type="text" class="form-control" ng-model="contact.first_name" placeholder="Nombres" />
 
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" name="email" placeholder="Apellidos" />
+                            <input type="text" class="form-control" ng-model="contact.last_name" placeholder="Apellidos" />
 
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" name="email" placeholder="Ciudad" />
+                            <angucomplete id="ex1" placeholder="Ciudad" ng-model="selectedCities" pause="100" selectedobject="selectedCities" localdata="listCities" searchfields="city_name" titlefield="city_name" minlength="1" inputclass="form-control form-control-small" matchclass="highlight" />
 
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" name="email" placeholder="Direccion" />
+                            <input type="text" class="form-control" ng-model="address.address" placeholder="Direccion" />
 
                         </div>
                     </div>
@@ -67,19 +68,19 @@
                     <label class="col-form-label text-left col-lg-12 col-sm-12" style="color:white;">Tipo</label>
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" name="email" placeholder="Nombre Contacto" />
+                            <input type="text" class="form-control" ng-model="contact.first_name" placeholder="Nombre Contacto" />
 
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" name="email" placeholder="Apellido Contacto" />
+                            <input type="text" class="form-control" ng-model="contact.last_name" placeholder="Apellido Contacto" />
 
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" name="email" placeholder="Correo Electronico" />
+                            <input type="text" class="form-control" ng-model="contact.email" placeholder="Correo Electronico" />
 
                         </div>
                     </div>
@@ -94,10 +95,10 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-5 col-md-5 col-sm-5">
-                            <input type="text" class="form-control" name="email" placeholder="Indicativo" />
+                            <input type="text" class="form-control" ng-model="phones.indicative" placeholder="Indicativo" />
                         </div>
                         <div class="col-lg-7 col-md-7 col-sm-7">
-                            <input type="text" class="form-control" name="email" placeholder="# Telefono" />
+                            <input type="text" class="form-control" ng-model="phones.number" placeholder="# Telefono" />
                         </div>
                     </div>
                 </div>
@@ -107,14 +108,18 @@
                     <br>
                     <br>
                     <p>Verifica la responsabilidad en el RUT de tu cliente, minimo asignar R-99-PN</p>
-                    <input type="checkbox">
+                    <div ng-repeat="item in listFiscal ">
+                        <input type="checkbox" ng-model="item.Selected"/>
+                        <label> {{item.code+" "+item.name}}</label><br>
+                    </div>
+                    <!--<input type="checkbox">
                     <label for="vehicle1"> 0-13 Grab Contribuyente</label><br>
                     <input type="checkbox">
                     <label for="vehicle2"> 0-15 Autoretenedor</label><br>
                     <input type="checkbox">
                     <label for="vehicle3"> 0-23 Régimen simple de tributación</label><br>
                     <input type="checkbox">
-                    <label for="vehicle3"> R-99-PN No aplica - otros</label><br><br>
+                    <label for="vehicle3"> R-99-PN No aplica - otros</label><br><br>-->
                 </div>
             </div>
 

@@ -20,5 +20,12 @@ namespace Web.Controllers
         {
             return await _administrationService.LoginAsync(loginEntity.login, loginEntity.password);
         }
+
+        [HttpPost]
+        [Route("api/encryptstring")]
+        public string EncryptString(LoginEntity LoginEntity)
+        {
+            return _administrationService.EncryptString(LoginEntity);
+        }
     }
 }

@@ -12,7 +12,11 @@ function listUsersController($scope, $location, GeneralService) {
         { headerName: aLanguage.name, field: "UserFirstName" },
         { headerName: aLanguage.surnames, field: "UserLastName" },
         { headerName: aLanguage.email, field: "UserEmail" },
-        { headerName: aLanguage.actions, field: "-" }
+        {
+            headerName: aLanguage.actions, cellStyle: { "text-align": "Center" }, cellRenderer: function (row) {
+                return "<button style='height: 1rem;' class='btn btn-sm btn-icon' ng-click='modUserId(" + row.data.UserId +")'><i class='flaticon-edit'></i></button>";
+            }
+        }
     ];
 
     $scope.rowData = [];
@@ -28,15 +32,22 @@ function listUsersController($scope, $location, GeneralService) {
             sortable: true,
             filter: true,
             resize: true
-        }
+        },
+        angularCompileRows: true
     };
 
     $scope.loadUsers = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetAllActiveUsers",
+            "StoredParams": []
+        };
         GeneralService.executeAjax({
-            url: 'api/getAllUsers',
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
             success: function (response) {
-                if (response.Exception !== null) {
-                    $scope.listUsersGrid.api.setRowData(response);
+                if (response.Exception === null) {
+                    $scope.listUsersGrid.api.setRowData(response.Value[0].DataMapped);
+
                 }
             }
         });
@@ -47,8 +58,9 @@ function listUsersController($scope, $location, GeneralService) {
         $location.path('/addUser');
     };
 
-    $scope.modUserId = function () {
-        GeneralService.userId = $scope.userIdSelected;
+    $scope.modUserId = function (UserId) {
+        GeneralService.userId = UserId;
+        $location.path('/addUser');
     };
 
     angular.element(document).ready(init);

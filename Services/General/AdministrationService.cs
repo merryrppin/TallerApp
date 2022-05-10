@@ -102,51 +102,63 @@ namespace Services.General
         #region User
         public async Task<LoginEntity> LoginAsync(string login, string password)
         {
-            LoginEntity loginResp = new LoginEntity();
-            string passwordEncrypted = Encode_Decode.Encrypt(password);
-
-            using (SqlConnection con = new SqlConnection(ConnString))
+            try
             {
-                using (SqlCommand cmd = new SqlCommand("GetLoginData", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@login", SqlDbType.VarChar).Value = login;
-                    cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = passwordEncrypted;
-                    using (SqlDataAdapter sda = new SqlDataAdapter())
-                    {
-                        cmd.Connection = con;
-                        sda.SelectCommand = cmd;
-                        using (DataSet ds = new DataSet())
-                        {
-                            sda.Fill(ds);
-                            DataTable dtUser = ds.Tables[0];
-                            if (dtUser.Rows.Count > 0)
-                            {
-                                DataRow firstRowUser = dtUser.Rows[0];
-                                loginResp = new LoginEntity
-                                {
-                                    UserId = Convert.ToInt32(firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserId")].ToString()),
-                                    UserFirstName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserFirstName")].ToString(),
-                                    UserLastName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserLastName")].ToString(),
-                                    UserCompleteName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserCompleteName")].ToString(),
-                                    usuariosiigo = firstRowUser.ItemArray[dtUser.Columns.IndexOf("usuariosiigo")].ToString(),
-                                    accesskey = firstRowUser.ItemArray[dtUser.Columns.IndexOf("accesskey")].ToString(),
-                                    access_token = firstRowUser.ItemArray[dtUser.Columns.IndexOf("accesstoken")].ToString(),
-                                    daydiff = firstRowUser.ItemArray[dtUser.Columns.IndexOf("daydiff")].ToString()
-                                };
+                LoginEntity loginResp = new LoginEntity();
+                string passwordEncrypted = Encode_Decode.Encrypt(password);
 
-                                if (string.IsNullOrEmpty(loginResp.daydiff) || Convert.ToInt32(loginResp.daydiff) > 0)
+                using (SqlConnection con = new SqlConnection(ConnString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("GetLoginData", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@login", SqlDbType.VarChar).Value = login;
+                        cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = passwordEncrypted;
+                        using (SqlDataAdapter sda = new SqlDataAdapter())
+                        {
+                            cmd.Connection = con;
+                            sda.SelectCommand = cmd;
+                            using (DataSet ds = new DataSet())
+                            {
+                                sda.Fill(ds);
+                                DataTable dtUser = ds.Tables[0];
+                                if (dtUser.Rows.Count > 0)
                                 {
-                                    await LoginSiigoAsync(loginResp);
+                                    DataRow firstRowUser = dtUser.Rows[0];
+                                    loginResp = new LoginEntity
+                                    {
+                                        UserId = Convert.ToInt32(firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserId")].ToString()),
+                                        UserFirstName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserFirstName")].ToString(),
+                                        UserLastName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserLastName")].ToString(),
+                                        UserCompleteName = firstRowUser.ItemArray[dtUser.Columns.IndexOf("UserCompleteName")].ToString(),
+                                        usuariosiigo = firstRowUser.ItemArray[dtUser.Columns.IndexOf("usuariosiigo")].ToString(),
+                                        accesskey = firstRowUser.ItemArray[dtUser.Columns.IndexOf("accesskey")].ToString(),
+                                        access_token = firstRowUser.ItemArray[dtUser.Columns.IndexOf("accesstoken")].ToString(),
+                                        daydiff = firstRowUser.ItemArray[dtUser.Columns.IndexOf("daydiff")].ToString()
+                                    };
+
+                                    if (string.IsNullOrEmpty(loginResp.daydiff) || Convert.ToInt32(loginResp.daydiff) > 0)
+                                    {
+                                        await LoginSiigoAsync(loginResp);
+                                    }
+                                    await LoadProductsSiigo(loginResp);
+                                    await LoadCustomersSiigo(loginResp);
                                 }
-                                await LoadProductsSiigo(loginResp);
-                                await LoadCustomersSiigo(loginResp);
                             }
                         }
                     }
                 }
+                return loginResp;
             }
-            return loginResp;
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public string EncryptString(LoginEntity LoginEntity)
+        {
+            return Encode_Decode.Encrypt(LoginEntity.password);
         }
 
         private async Task LoginSiigoAsync(LoginEntity loginResp)

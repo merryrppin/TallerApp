@@ -10,15 +10,48 @@ function addUserController($scope, $rootScope, $location, GeneralService) {
     $scope.currentUser = { UserId: $scope.userIdSelected };
 
     $scope.loadUser = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetUser",
+            "StoredParams": [{
+                Name: "UserId",
+                Value: $scope.userIdSelected
+            }]
+        };
+
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Value.length === 1) {
+                    $scope.currentUser = response.Value[0].DataMapped[0];
+                } else {
+                    GeneralService.showToastR({
+                        body: aLanguage[response.GeneralError],
+                        type: 'error'
+                    });
+                }
+            }
+        });
     };
 
+    if ($scope.userIdSelected !== -1) {
+        $scope.loadUser();
+    }
+
     $scope.saveUser = function () {
-        var apiMethod = $scope.userIdSelected === -1 ? 'addUser' : 'updateUser';
+        var dataSP = {
+            "StoredProcedureName": "SaveUser",
+            "StoredParams": [{
+                Name: "jsonUser",
+                Value: JSON.stringify($scope.currentUser)
+            }]
+        };
+
         GeneralService.executeAjax({
-            url: 'api/' + apiMethod,
-            data: $scope.currentUser,
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
             success: function (response) {
-                if (response.BooleanResponse) {
+                if (response.Value.length === 0) {
                     GeneralService.showToastR({
                         body: aLanguage.saveSuccessful,
                         type: 'success'
@@ -33,9 +66,26 @@ function addUserController($scope, $rootScope, $location, GeneralService) {
             }
         });
     };
+
+
+    $scope.encryptPassword = function (strPassword) {
+        $scope.loading = true;
+        GeneralService.executeAjax({
+            url: 'api/encryptstring',
+            data: {
+                password: strPassword
+            },
+            success: function (response) {
+                $scope.currentUser.PasswordEncrypt = response;
+                $scope.saveUser();
+            }
+        });
+    };
+
+
     $rootScope.saveBtnFunction = function () {
         if ($("#frmUser").valid()) {
-            $scope.saveUser();
+            $scope.encryptPassword($scope.currentUser.Password);
         }
     }
 
@@ -67,7 +117,8 @@ function addUserController($scope, $rootScope, $location, GeneralService) {
                     required: true
                 },
                 password1: {
-                    required: true
+                    required: true,
+                    minlength: 6
                 },
                 password2: {
                     required: true,

@@ -164,6 +164,13 @@
                 <!-- end: Header Menu -->
                 <!-- begin:: Header Topbar -->
                 <div class="kt-header__topbar">
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                        <button type="button" class="btn btn-primary" data-ng-if="$root.showNewButton" data-ng-click="$root.newBtnFunction()"><i class="la la-plus"></i></button>
+                        <button type="button" class="btn btn-primary" data-ng-if="$root.showSaveButton" data-ng-click="$root.saveBtnFunction()"><i class="la la-floppy-o"></i></button>
+                        <button type="button" class="btn btn-primary" data-ng-if="$root.showPrintButton" data-ng-click="$root.printBtnFunction()"><i class="la la-print"></i></button>
+                        <button type="button" class="btn btn-primary" data-ng-if="$root.showClearButton" data-ng-click="$root.clearBtnFunction()"><i class="la la-trash"></i></button>
+                        <button type="button" class="btn btn-primary" data-ng-if="$root.showCancelButton" data-ng-click="$root.cancelBtnFunction()"><i class="la la-arrow-left"></i></button>
+                    </div>
                     <!--begin: Search -->
                     <!--begin: User Bar -->
                     <div class="kt-header__topbar-item kt-header__topbar-item--user">

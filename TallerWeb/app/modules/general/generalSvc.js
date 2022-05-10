@@ -30,8 +30,8 @@ function GeneralService($http, $rootScope, $window) {
             params: options.params,
             data: options.data
         }).then(function (response) {
-            if (typeof response === 'undefined' || (typeof response.data.Exception !== 'undefined' && response.data.Exception !== null)) {
-                var errorMessage = typeof response === 'undefined' ? aLanguage.generalError : response.data.Exception.Message;
+            if (typeof response === 'undefined' || response.data === null || (response.data !== null && typeof response.data.Exception !== 'undefined' && response.data.Exception !== null)) {
+                var errorMessage = typeof response === 'undefined' || response.data === null ? aLanguage.generalError : response.data.Exception.Message;
                 generalService.showToastR({
                     body: errorMessage,
                     type: 'error'

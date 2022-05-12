@@ -1,7 +1,12 @@
 ﻿angular.module(aLanguage.appName).controller('addCustomersController', ["$scope", '$rootScope', "$location", "GeneralService", addCustomersController]);
-function addCustomersController($scope, $rootScope, $location, GeneralService) {
+function addCustomersController($scope, $rootScope, $location,  GeneralService) {
     $scope.listTypeIdentification = [];
-    $scope.Customers = { id: "", type: "", person_type: "", id_type: "", identification: null, branch_office: 0, check_digit: null, name: "", comercial_name: "", active: 1, vat_responsible: 0, fiscal_responsibilities: "", addess: "", phone: "", contact: "", comments: "" };
+    $scope.listFiscal = [];
+    $scope.listCities = [];
+    $scope.phones = {indicative:"",number:"",extension:""}
+    $scope.contact = { first_name: "", last_name: "", email: "", phone: $scope.phones}
+    $scope.address = {address:"",city:null,postal_code:""}
+    $scope.Customers = { id: "", type: "Customer", person_type: "", id_type: "", identification: null, branch_office: 0, check_digit: "", name: "", commercial_name: "", active: "true", vat_responsible: "true", fiscal_responsibilities: "", address: "", phones: [$scope.phones], contacts: "", comments: "" };
     $scope.loadTypeIdentification = function () {
         var dataSP = {
             "StoredProcedureName": "GetTypeIdentification",
@@ -13,6 +18,38 @@ function addCustomersController($scope, $rootScope, $location, GeneralService) {
             success: function (response) {
                 if (response.Exception === null) {
                     $scope.listTypeIdentification = response.Value[0].DataMapped;
+                }
+            }
+        });
+    };
+    $scope.loadFiscalResposabilities = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetFiscalResponsabilities",
+            "StoredParams": []
+        };
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    $scope.listFiscal = response.Value[0].DataMapped;
+                    $scope.listFiscal.forEach(x => { Selected: false });
+                }
+            }
+        });
+    };
+
+    $scope.loadcities = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetCities",
+            "StoredParams": []
+        };
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    $scope.listCities = response.Value[0].DataMapped;
                 }
             }
         });
@@ -73,11 +110,23 @@ function addCustomersController($scope, $rootScope, $location, GeneralService) {
         $scope.Customers.check_digit = (y > 1) ? 11 - y : y;
     }
 
-
+    $scope.saveCustomer = function () {
+        $scope.Customers.check_digit = $scope.Customers.check_digit.toString();
+        $scope.Customers.name = [$scope.contact.first_name, $scope.contact.last_name];
+        $scope.Customers.commercial_name = $scope.contact.first_name+" "+ $scope.contact.last_name
+        $scope.address.city = $scope.selectedCities.originalObject;
+        $scope.Customers.contacts = [$scope.contact];
+        $scope.Customers.address = $scope.address
+        $scope.Customers.fiscal_responsibilities = $scope.listFiscal.filter(x => x.Selected == true);
+        $scope.Customers;
+    }
     angular.element(document).ready(init);
 
     function init() {
         $scope.loadTypeIdentification();
+        $scope.loadFiscalResposabilities();
+        $scope.loadcities();
+
     }
 
 }

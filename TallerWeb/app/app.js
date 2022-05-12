@@ -4,6 +4,7 @@
         'ui.router',                        // Routing
         'oc.lazyLoad',                      // ocLazyLoad
         //'agGrid'                            // agGrid
+        'angucomplete'
     ]).run(function ($rootScope, $state, $injector) {
         //$rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {            
         //    console.log(fromState);

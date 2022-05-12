@@ -98,6 +98,8 @@
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetAllActiveUsers.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\SaveUser.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetUser.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetFiscalResponsabilities.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetCities.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\UpdatePasswordUser.sql" />
   </ItemGroup>
   <ItemGroup>

@@ -32,7 +32,7 @@ BEGIN
 	END ELSE BEGIN
 		--UPDATE
 		UPDATE [tblUsers]
-		 SET [UserFirstName] = @UserFirstName, [UserLastName] = @UserLastName, [UserEmail] = @UserEmail, [Login] = @Login, [Password] = @Password
+		 SET [UserFirstName] = @UserFirstName, [UserLastName] = @UserLastName, [UserEmail] = @UserEmail, [Login] = @Login
 		WHERE UserId = @UserId;
 	END
 	

@@ -45,7 +45,9 @@ function loginController($scope, $rootScope, GeneralService, SessionService) {
                         });
                         $scope.loading = false;
                     }
-                }
+                },
+                funcionIncorrecto: function () { $scope.loading = false; },
+                confirmation: true
             });
 
         }

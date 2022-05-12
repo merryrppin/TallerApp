@@ -67,7 +67,6 @@ function addUserController($scope, $rootScope, $location, GeneralService) {
         });
     };
 
-
     $scope.encryptPassword = function (strPassword) {
         $scope.loading = true;
         GeneralService.executeAjax({
@@ -82,10 +81,12 @@ function addUserController($scope, $rootScope, $location, GeneralService) {
         });
     };
 
-
     $rootScope.saveBtnFunction = function () {
         if ($("#frmUser").valid()) {
-            $scope.encryptPassword($scope.currentUser.Password);
+            if ($scope.userIdSelected !== -1)
+                $scope.saveUser();
+            else
+                $scope.encryptPassword($scope.currentUser.Password);
         }
     }
 

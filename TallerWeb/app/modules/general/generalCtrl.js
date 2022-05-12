@@ -1,5 +1,5 @@
-﻿angular.module(aLanguage.appName).controller('generalController', ["$scope", '$rootScope', "$timeout", "$filter", "$location", "SessionService", "GeneralService", generalController]);
-function generalController($scope, $rootScope, $timeout, $filter, $location, SessionService, GeneralService) {
+﻿angular.module(aLanguage.appName).controller('generalController', ["$scope", '$filter', '$rootScope', "$timeout", "$location", "SessionService", "GeneralService", generalController]);
+function generalController($scope, $filter, $rootScope, $timeout, $location, SessionService, GeneralService) {
     var ctrl = this;
     ctrl.selectedLanguage = GeneralService.selectedLanguage;
     ctrl.aLanguage = aLanguage;

@@ -36,6 +36,8 @@ function GeneralService($http, $rootScope, $window) {
                     body: errorMessage,
                     type: 'error'
                 });
+                if (options.confirmation)
+                    options.funcionIncorrecto();
                 return;
             } else {
                 if (options.confirmation) {

@@ -16,3 +16,7 @@
 .col-xl-auto {
     padding-bottom: 5px;
 }
+
+.select2-selection__rendered{
+    min-height: 36.3px !important;
+}

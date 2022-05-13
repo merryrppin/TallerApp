@@ -212,6 +212,7 @@
     <Content Include="Libs\ag-grid.v22.0.0\styles\agGridMaterialFont.min.css" />
     <Content Include="Libs\ag-grid.v22.0.0\styles\compiled-icons.css" />
     <Content Include="Libs\ag-grid.v22.0.0\styles\generate-web-fonts.js" />
+    <Content Include="Libs\ag-grid.v27.2.1\ag-grid-community.min.js" />
     <Content Include="Libs\AngularJS\angular-route.1.7.8.min.js" />
     <Content Include="Libs\AngularJS\Angular-sanitize.1.7.8\angular-sanitize.js" />
     <Content Include="Libs\AngularJS\Angular-sanitize.1.7.8\angular-sanitize.min.js" />

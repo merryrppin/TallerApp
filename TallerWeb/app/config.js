@@ -186,6 +186,21 @@
                 }]
             }
         })
+        .state('cotizaciones', {
+            url: "/cotizaciones",
+            templateUrl: "app/modules/transacciones/cotizaciones/cotizaciones.html",
+            controller: "cotizacionesController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: aLanguage.appName,
+                        files: [
+                            'app/modules/transacciones/cotizaciones/cotizacionesCtrl.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('404', {
             url: "/404",
             templateUrl: "app/modules/general/error/404.html",

@@ -3,5 +3,5 @@ BEGIN
 	SELECT [MenuId], [Name], [Description], [Icon], [ParentMenuId], [Order], [Active], [Url], [Level] 
 	FROM [param].[tblMenu] 
 	WHERE [Active] = 1 
-	ORDER BY [Level] DESC;
+	ORDER BY [Level] DESC, [Order] ASC;
 END

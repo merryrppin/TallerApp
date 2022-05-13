@@ -12,13 +12,16 @@ INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(10,'Series','','',5,100,1,'',1);
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(11,'Listar Series','','',10,100,1,'#!/listSeries',2);
 
-INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(8,'Ventas','','flaticon2-shopping-cart-1',NULL,200,1,'',0);
+INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(8,'Ventas','','flaticon2-shopping-cart-1',NULL,300,1,'',0);
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(9,'Factura Ventas','','',8,100,1,'#!/addSaleInvoice',1);
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(12,'Lista de precios','','',8,200,1,'#!/priceList',1);
 
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(13,'Productos','','flaticon2-box',NULL,400,1,'',0);
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(14,'Lista productos','','',13,100,1,'#!/listProducts',1);
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(15,'Clientes','','',5,100,1,'#!/addCustomerss',1);
+
+INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(16,'Transacciones','','flaticon2-percentage',NULL,500,1,'',0);
+INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(17,'Cotizaciones','','',16,100,1,'#!/cotizaciones',1);
 
 SET IDENTITY_INSERT [param].[tblMenu] OFF
 

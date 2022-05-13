@@ -1,0 +1,68 @@
+﻿<div class="kt-portlet__head">
+    <div class="kt-portlet__head-label">
+        <h3 class="kt-portlet__head-title">Nueva Cotización</h3>
+    </div>
+</div>
+
+<form class="kt-form kt-form--label-right" autocomplete="off" ng-submit="saveCotizacion()" id="frmCotizacion">
+    <div class="kt-portlet__body">
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>Tipo</label>
+                <input data-ng-model="cotizacion.tipo" id="tipo" name="tipo" type="text" class="form-control" placeholder="Tipo de cotización">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>Número:</label>
+                <br />Numeración Automática
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>Clientes:</label>
+                <div class="input-group date" style="height:30px">
+                    <select data-ng-model="cotizacion.cliente" id="cliente" name="cliente" class="form-control select2cls" placeholder="Cliente"></select>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="la la-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>Fecha de elaboración</label>
+                <div class="input-group date">
+                    <input type="text" class="form-control datepicker" readonly="" data-ng-model="cotizacion.fechaElaboracion" id="fechaElaboracion" name="fechaElaboracion">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="la la-calendar glyphicon-th"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>Contacto:</label>
+                <div class="input-group date" style="height:30px">
+                    <select data-ng-model="cotizacion.contacto" id="contacto" name="contacto" class="form-control select2cls" placeholder="Contacto"></select>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="la la-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+                <label>Responsable de la cotización</label>
+                <input data-ng-model="cotizacion.responsableCotizacion" id="responsableCotizacion" name="responsableCotizacion" type="text" class="form-control" placeholder="Buscar">
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 form-group validated">
+                <label>Encabezado:</label>
+                <textarea id="encabezado" name="encabezado" data-ng-model="cotizacion.encabezado" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                <div data-ag-grid="listProductsGrid" style="height: 20vh !important;" class="ag-theme-fresh"></div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: right;">
+                Total Bruto: {{total.totalBruto}}<br />
+                Descuentos: {{total.descuentos}}<br />
+                Subtotal: {{total.subTotal}}<br />
+                <h4><b>Total Neto: {{total.totalNeto}}</b></h4>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 form-group validated">
+                <label>Condiciones Comerciales:</label>
+                <textarea id="condicionesComerciales" name="condicionesComerciales" data-ng-model="cotizacion.condicionesComerciales" class="form-control" rows="4"></textarea>
+            </div>
+        </div>
+    </div>
+</form>

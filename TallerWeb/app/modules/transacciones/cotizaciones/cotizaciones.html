@@ -38,7 +38,7 @@
             <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Contacto:</label>
                 <div class="input-group" style="height:30px">
-                    <select data-ng-disabled="cotizacion.cliente == ''" data-ng-model="cotizacion.contacto" id="contacto" name="contacto" class="form-control select2cls">
+                    <select data-ng-disabled="cotizacion.cliente == ''" data-ng-model="cotizacion.contacto" id="contacto" name="contacto" class="form-control select2cls" data-ng-change="selectContacto()">
                         <option data-ng-repeat="contactoItem in contactos" data-select2-id="{{contactoItem.id}}">{{contactoItem.name}}</option>
                     </select>
                     <div class="input-group-append">
@@ -100,10 +100,10 @@
                 </table>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: right;">
-                Total Bruto: {{total.totalBruto}}<br />
-                Descuentos: {{total.descuentos}}<br />
-                Subtotal: {{total.subTotal}}<br />
-                <h4><b>Total Neto: {{total.totalNeto}}</b></h4>
+                Total Bruto: {{cotizacion.totalBruto}}<br />
+                Descuentos: {{cotizacion.descuentos}}<br />
+                Subtotal: {{cotizacion.subTotal}}<br />
+                <h4><b>Total Neto: {{cotizacion.totalNeto}}</b></h4>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 form-group validated">
                 <label>Condiciones Comerciales:</label>

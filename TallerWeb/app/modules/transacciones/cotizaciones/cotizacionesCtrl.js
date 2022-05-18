@@ -7,23 +7,21 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     $rootScope.showSaveButton = true;
     $scope.aLanguage = aLanguage;
 
-    $scope.total = {
-        totalBruto: '0.00',
-        descuentos: '0.00',
-        subTotal: '0.00',
-        totalNeto: '0.00',
-    };
-
     $scope.cotizacion = {
         tipo: { 'Name': 'C-1-Cotización' },
         numero: '',
         cliente: '',
         fechaElaboracion: moment().format('YYYY/MM/DD'),
         contacto: '',
+        nombreContacto: '',
         responsableCotizacion: GeneralService.userLogin.UserCompleteName,
         responsableCotizacionId: GeneralService.userLogin.UserId,
         encabezado: '',
         condicionesComerciales: '',
+        totalBruto: '0.00',
+        descuentos: '0.00',
+        subTotal: '0.00',
+        totalNeto: '0.00',
     };
 
     $scope.newProduct = {
@@ -85,6 +83,34 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                 }
             }
         });
+    };
+
+    $rootScope.saveBtnFunction = function () {
+        if ($("#frmCotizacion").valid()) {
+            if ($scope.userIdSelected !== -1)
+                $scope.saveUser();
+            else
+                $scope.encryptPassword($scope.currentUser.Password);
+        }
+    };
+
+    $scope.validateDataGridProduct = function () {
+        if ($scope.dataGridProduct.length > 0) {
+            $.each($scope.dataGridProduct, function (i, objProduct) {
+                if (product.productoId === null || product.productoId === "" || product.cantidad <= 0) {
+                    GeneralService.showToastR({
+                        body: "Todos los productos agregados, deben tener una cantidad correcta",
+                        type: 'error'
+                    });
+                }
+            });
+
+        } else {
+            GeneralService.showToastR({
+                body: "Debe agregar al menos 1 producto",
+                type: 'error'
+            });
+        }
     };
 
     $scope.addProduct = function () {
@@ -151,10 +177,10 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
             impuestoTotal += objProduct.impuestoCargo;
         });
 
-        $scope.total.totalBruto = totalBruto;
-        $scope.total.descuentos = totalDescuentos;
-        $scope.total.subTotal = subTotal;
-        $scope.total.totalNeto = $scope.total.subTotal + impuestoTotal;
+        $scope.cotizacion.totalBruto = totalBruto;
+        $scope.cotizacion.descuentos = totalDescuentos;
+        $scope.cotizacion.subTotal = subTotal;
+        $scope.cotizacion.totalNeto = $scope.cotizacion.subTotal + impuestoTotal;
     };
 
     angular.element(document).ready(init);
@@ -171,28 +197,23 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         $('.select2cls').select2({
             placeholder: "Seleccione una opción"
         });
-        $("#frmUser").validate({
+        $("#frmCotizacion").validate({
             rules: {
-                userFirstName: {
+                cliente: {
                     required: true
                 },
-                userLastName: {
+                fechaElaboracion: {
+                    required: true,
+                    dateISO: true
+                },
+                contacto: {
                     required: true
                 },
-                email: {
-                    required: true,
-                    email: true
-                },
-                login: {
+                //encabezado: {
+                //    required: true
+                //},
+                condicionesComerciales: {
                     required: true
-                },
-                password1: {
-                    required: true,
-                    minlength: 6
-                },
-                password2: {
-                    required: true,
-                    equalTo: "#password1"
                 }
             }
         });

@@ -1178,3 +1178,253 @@ VALUES('13','Cédula de ciudadanía'),
 --[param].[tblSessionSiigo]
 INSERT INTO [param].[tblSessionSiigo] ([id], [usuario], [accesskey])
 VALUES (NEWID(), 'catalina.causil@agroequiposalpujarra.com', 'Y2UwNjU2NjYtM2E5ZC00MGJkLTllYWItZGFmMThkYzRlOTM5Ojh6TDYjQywlbUM=');
+
+--ESTRUCTURAS DE PRODUCTO
+
+--ID Temporales, se necesitan los que se inserten en siigo
+DECLARE @IdMotosierra UNIQUEIDENTIFIER = '45CD39A8-9878-4D77-81F4-A9628D2B8D59' -- 'F27B64D4-E517-43C1-B229-BD94F5339FD5'
+DECLARE @IdGuadanadora UNIQUEIDENTIFIER = '3D6197FD-F6DA-4A74-BB9B-3C539773608D' -- '1FE9C902-0E23-40EC-A772-CFC3A8EA962C'
+DECLARE @IdSopladora UNIQUEIDENTIFIER = '3BFF8297-5E36-4019-B41D-A1DEEAC770ED'
+DECLARE @IdHidrolavadora UNIQUEIDENTIFIER = 'BF863250-8B7C-41FA-9053-2B542A143D70'
+DECLARE @IdCortasetos UNIQUEIDENTIFIER = 'B0B29631-7B41-48B0-8EF3-197A1D01A09A'
+DECLARE @IdFumigadoraManual UNIQUEIDENTIFIER = '0676D523-E20D-40A7-BAAB-280540104DE3'
+DECLARE @IdFumigadoraMotor UNIQUEIDENTIFIER = '4F6B9729-2146-461F-B16C-5F520A7E0C0E'
+DECLARE @IdFumigadoraEstacionaria UNIQUEIDENTIFIER = 'DE7C96D1-11E6-4940-A723-720FD07DAF4B'
+DECLARE @IdOtrosEquipos UNIQUEIDENTIFIER = NULL
+DECLARE @IdBomba UNIQUEIDENTIFIER = 'CDBA45EB-4C2A-4DFB-BC27-70B36C7E734B'
+DECLARE @IdGenerador UNIQUEIDENTIFIER = '0AA115AB-8095-4DD2-80C0-A9F1DAB6B259'
+DECLARE @IdMotor UNIQUEIDENTIFIER = '860A7BD5-20AA-4DE4-9AA2-22C58CD8D772'
+
+--Id ProductPropertyTypes
+DECLARE @IdProductPropertiesMotosierra UNIQUEIDENTIFIER = '7F74C89E-78B8-4060-B8D5-7A4DAFE6FD9B'
+DECLARE @IdProductPropertiesGuadanadora UNIQUEIDENTIFIER = '7D750BC2-091C-4FEF-9FB3-BA0B1377415F'
+DECLARE @IdProductPropertiesSopladora UNIQUEIDENTIFIER = '0C10EBB2-414E-41A7-BC80-36556935E72C'
+DECLARE @IdProductPropertiesHidrolavadora UNIQUEIDENTIFIER = 'E5B318C7-E5A7-4FBA-90F8-8E64F22367FF'
+DECLARE @IdProductPropertiesCortasetos UNIQUEIDENTIFIER = '2DAA8A33-871C-4199-9706-567AC6D801C8'
+DECLARE @IdProductPropertiesFumigadoraManual UNIQUEIDENTIFIER = 'EEAF3514-4BEB-41C9-B7FE-84B86AFA47EF'
+DECLARE @IdProductPropertiesFumigadoraMotor UNIQUEIDENTIFIER = '16D389EA-672B-485D-8B16-60D6A166690B'
+DECLARE @IdProductPropertiesFumigadoraEstacionaria UNIQUEIDENTIFIER = '9C935BF0-F0C3-4F0C-BACC-D21754C0CFBC'
+DECLARE @IdProductPropertiesOtrosEquipos UNIQUEIDENTIFIER = '7A5A3D97-F645-4CC6-8488-EDDBD2BA6DE4'
+DECLARE @IdProductPropertiesBomba UNIQUEIDENTIFIER = '67F07CF4-9EE0-4D80-AEC5-3281A4327AF3'
+DECLARE @IdProductPropertiesGenerador UNIQUEIDENTIFIER = '2CF26C13-25F0-40CF-8C1F-80423ABEC922'
+DECLARE @IdProductPropertiesMotor UNIQUEIDENTIFIER = 'DACBF334-4A6E-4336-8F6B-00FE26983FA9'
+
+INSERT INTO [tblProductPropertyTypes]([IdProductPropertyType], [IdProduct], [HasProperties], [HasOptions]) VALUES 
+	(@IdProductPropertiesMotosierra, @IdMotosierra, 1, 0),--Motosierra
+	(@IdProductPropertiesGuadanadora, @IdGuadanadora, 1, 0),--Guadañadora
+	(@IdProductPropertiesSopladora, @IdSopladora, 1, 0),--Sopladora
+	(@IdProductPropertiesHidrolavadora, @IdHidrolavadora, 1, 0),--Hidrolavadora
+	(@IdProductPropertiesCortasetos, @IdCortasetos, 1, 0),--Cortasetos
+	(@IdProductPropertiesFumigadoraManual, @IdFumigadoraManual, 1, 0),--Fumigadora manual
+	(@IdProductPropertiesFumigadoraMotor, @IdFumigadoraMotor, 1, 0),--Fumigadora a motor
+	(@IdProductPropertiesFumigadoraEstacionaria, @IdFumigadoraEstacionaria, 1, 0),--Fumigadora estacionaria
+	(@IdProductPropertiesOtrosEquipos, @IdOtrosEquipos, 0, 1),--Otros equipos
+	(@IdProductPropertiesBomba, @IdBomba, 1, 0),--Bomba
+	(@IdProductPropertiesGenerador, @IdGenerador, 1, 0),--Generador
+	(@IdProductPropertiesMotor, @IdMotor, 1, 0);--Motor
+	
+--Id Properties
+DECLARE @IdMarcaSelect UNIQUEIDENTIFIER = '846916C6-22A5-43FC-8803-92986ECF98C6';
+DECLARE @IdModeloInput UNIQUEIDENTIFIER = '550A936D-F4B6-4202-939E-BA6D9DC5E95B';
+DECLARE @IdEspadaSelect UNIQUEIDENTIFIER = 'DE2ED903-D29D-4C78-A6AA-E1A2F3FE1B67';
+DECLARE @IdProtectorSelect UNIQUEIDENTIFIER = '1B6B22B7-90FA-4915-8AAF-D923EC0208F5';
+DECLARE @IdCadenaSelect UNIQUEIDENTIFIER = 'AC6FA809-BDB2-419F-928B-049D527CA273';
+DECLARE @IdDesarmadoSelect UNIQUEIDENTIFIER = '72DD40AA-C571-422F-89D2-B5B29B15BD3A';
+DECLARE @IdNoSerialInput UNIQUEIDENTIFIER = 'F99EFC8E-C315-410A-A275-7E08EC07FB5C';
+DECLARE @IdTuboSopladorSelect UNIQUEIDENTIFIER = 'D3411E5B-B896-42F4-9DEA-F5A09CDAEF20';
+DECLARE @IdCuchillaSelect UNIQUEIDENTIFIER = 'BB0F8165-0876-4493-AD24-6254E28EA5BD';
+DECLARE @IdYoyoSelect UNIQUEIDENTIFIER = 'D5C0A57D-0A22-4B76-910B-16AEB461786E';
+DECLARE @IdArnesSelect UNIQUEIDENTIFIER = '6F38C3F6-3FE4-4AAA-856F-E42918BA892E';
+DECLARE @IdPistolaSelect UNIQUEIDENTIFIER = '4628F943-110C-4D1F-BFBF-5090036B9172';
+DECLARE @IdLanzaSelect UNIQUEIDENTIFIER = '51991ECE-2ECD-4BBE-BCA7-F7FAC07439B9';
+DECLARE @IdMangueraSelect UNIQUEIDENTIFIER = '1B96A449-2D73-4900-97DA-59986765A843';
+DECLARE @IdBoquillasSelect UNIQUEIDENTIFIER = 'DD7D35C0-7F61-44D8-A499-0C3A30204972';
+DECLARE @IdMarcaAddSelect UNIQUEIDENTIFIER = '18C1284D-B38E-4E7D-A113-BF6E952F44B8';
+DECLARE @IdPalancaSelect UNIQUEIDENTIFIER = '16E7DA7F-82B3-4333-A359-7A226EA3E5FB';
+DECLARE @IdTuboAspersorSelect UNIQUEIDENTIFIER = '5A4CC6B9-1F0F-401B-A430-973E2B1E74A6';
+DECLARE @IdRejillaSelect UNIQUEIDENTIFIER = '16E261E5-3A6E-4EB0-B7DB-DCE3837C6A48';
+DECLARE @IdEmpunaduraManoSelect UNIQUEIDENTIFIER = 'D81304EE-B409-4FFB-B80F-EB7B7A98BE2E';
+DECLARE @IdMangSuccionSelect UNIQUEIDENTIFIER = 'C0251888-0337-4651-8C80-704917357F48';
+DECLARE @IdMangRetornoSelect UNIQUEIDENTIFIER = '0B40ED18-6B49-439C-82B3-304114D60AE6';
+DECLARE @IdMarcaAddComplexSelect UNIQUEIDENTIFIER = '0206C6CA-5A14-4BC3-B7F7-51E7EC56A3F2';
+DECLARE @IdMarcaAddRCSelect UNIQUEIDENTIFIER = '81CD7071-DEF7-4CFA-87B0-A04C4186E042';
+DECLARE @IdMarcaAddYamSelect UNIQUEIDENTIFIER = '919A3820-6293-4E9C-9C8C-3304A05FB2D3';
+DECLARE @IdCorreasSelect UNIQUEIDENTIFIER = 'F9FDD266-D59A-4D32-A027-5361CEFE0494';
+
+
+INSERT INTO [tblProductProperties]([IdProductProperty], [TextProperty], [HasOptions], [HasText]) VALUES
+	(@IdMarcaSelect, 'Marca', 1, 0),
+	(@IdModeloInput, 'Modelo', 0, 1),
+	(@IdEspadaSelect, 'Espada', 1, 0),
+	(@IdProtectorSelect, 'Protector', 1, 0),
+	(@IdCadenaSelect, 'Cadena', 1, 0),
+	(@IdDesarmadoSelect, 'Desarmado', 1, 0),
+	(@IdNoSerialInput, 'No. Serial', 0, 1),
+	(@IdTuboSopladorSelect, 'Tubo soplador', 1, 0),
+	(@IdCuchillaSelect, 'Cuchilla', 1, 0),
+	(@IdYoyoSelect, 'Yoyo', 1, 0),
+	(@IdArnesSelect, 'Arnés', 1, 0),
+	(@IdPistolaSelect, 'Pistola', 1, 0),
+	(@IdLanzaSelect, 'Lanza', 1, 0),
+	(@IdMangueraSelect, 'Manguera', 1, 0),
+	(@IdBoquillasSelect, 'Boquillas', 1, 0),
+	(@IdMarcaAddSelect, 'Marca', 1, 0),
+	(@IdPalancaSelect, 'Palanca', 1, 0),
+	(@IdTuboAspersorSelect, 'Tubo aspersor', 1, 0),
+	(@IdRejillaSelect, 'Rejilla', 1, 0),
+	(@IdEmpunaduraManoSelect, 'Empuñadura mano', 1, 0),
+	(@IdMangSuccionSelect, 'Mang. Succión', 1, 0),
+	(@IdMangRetornoSelect, 'Mang. Retorno', 1, 0),
+	(@IdMarcaAddComplexSelect, 'Marca', 1, 0),
+	(@IdMarcaAddYamSelect, 'Marca', 1, 0),
+	(@IdMarcaAddRCSelect, 'Marca', 1, 0),
+	(@IdCorreasSelect, 'Correas', 1, 0);	
+	
+--Id Options
+DECLARE @IdStihl UNIQUEIDENTIFIER = '4D03258A-49E8-4209-98D2-1EDE23253A69';
+DECLARE @IdOtra UNIQUEIDENTIFIER = '5714BD9F-B524-4941-922D-47DD899BBEC9';
+DECLARE @IdSi UNIQUEIDENTIFIER = '2934EB29-699C-4508-8777-BA980CC52801';
+DECLARE @IdNo UNIQUEIDENTIFIER = '69339523-3A28-448B-AB90-7A06C38EBE82';
+DECLARE @IdAnnoviReverberi UNIQUEIDENTIFIER = '1202DEA2-F37B-4F1D-8492-F118D6C657CD';
+DECLARE @IdRoyalCondor UNIQUEIDENTIFIER = 'DF833F8D-F89E-48B3-8657-9468CE8D1CBD';
+DECLARE @IdYamaha UNIQUEIDENTIFIER = '573B0974-F31C-48A8-8363-74CE6A3727F9';
+DECLARE @IdPowerMaster UNIQUEIDENTIFIER = 'BAB9D283-6978-4A3F-9467-F09486432A0C';
+DECLARE @IdElite UNIQUEIDENTIFIER = 'BF92048E-8113-4A4A-99B8-0C265C488A85';
+DECLARE @IdEdo UNIQUEIDENTIFIER = '2E241784-2B9D-49DF-8128-9822C6E8DEF1';
+DECLARE @IdSolan UNIQUEIDENTIFIER = 'BFFA4B80-BB1B-4BE6-AA74-2BC0F9737614';
+
+INSERT INTO [tblProductPropertyOptions] ([IdProductPropertyOption], [TextOption], [HasText]) VALUES
+	(@IdStihl, 'STIHL', 0),
+	(@IdOtra, 'Otra', 1),
+	(@IdSi, 'Si', 0),
+	(@IdNo, 'No', 0),
+	(@IdAnnoviReverberi, 'Annovi Reverberi', 0),
+	(@IdRoyalCondor, 'Royal Condor', 0),
+	(@IdYamaha, 'Yamaha', 0),
+	(@IdSolan, 'Solan', 0),
+	(@IdPowerMaster, 'Power Master', 0),
+	(@IdElite, 'Elite', 0),
+	(@IdEdo, 'EDO', 0);
+
+INSERT INTO [tblProductPropertyType_ProductProperties]([IdProductPropertyType], [IdProductProperty], [Order]) VALUES
+	(@IdProductPropertiesMotosierra, @IdMarcaSelect, 100),
+	(@IdProductPropertiesMotosierra, @IdModeloInput, 200),
+	(@IdProductPropertiesMotosierra, @IdEspadaSelect, 300),
+	(@IdProductPropertiesMotosierra, @IdProtectorSelect, 400),
+	(@IdProductPropertiesMotosierra, @IdCadenaSelect, 500),
+	(@IdProductPropertiesMotosierra, @IdDesarmadoSelect, 600),
+	(@IdProductPropertiesMotosierra, @IdNoSerialInput, 700),
+	(@IdProductPropertiesGuadanadora, @IdMarcaSelect, 100),
+	(@IdProductPropertiesGuadanadora, @IdModeloInput, 200),
+	(@IdProductPropertiesGuadanadora, @IdCuchillaSelect, 300),
+	(@IdProductPropertiesGuadanadora, @IdYoyoSelect, 400),
+	(@IdProductPropertiesGuadanadora, @IdArnesSelect, 500),
+	(@IdProductPropertiesGuadanadora, @IdDesarmadoSelect, 600),
+	(@IdProductPropertiesGuadanadora, @IdNoSerialInput, 700),
+	(@IdProductPropertiesSopladora, @IdMarcaSelect, 100),
+	(@IdProductPropertiesSopladora, @IdModeloInput, 200),
+	(@IdProductPropertiesSopladora, @IdTuboSopladorSelect, 300),
+	(@IdProductPropertiesSopladora, @IdNoSerialInput, 400),
+	(@IdProductPropertiesSopladora, @IdDesarmadoSelect, 500),
+	(@IdProductPropertiesHidrolavadora, @IdMarcaAddSelect, 100),
+	(@IdProductPropertiesHidrolavadora, @IdModeloInput, 200),
+	(@IdProductPropertiesHidrolavadora, @IdPistolaSelect, 300),
+	(@IdProductPropertiesHidrolavadora, @IdLanzaSelect, 400),
+	(@IdProductPropertiesHidrolavadora, @IdMangueraSelect, 500),
+	(@IdProductPropertiesHidrolavadora, @IdBoquillasSelect, 600),
+	(@IdProductPropertiesHidrolavadora, @IdDesarmadoSelect, 700),
+	(@IdProductPropertiesHidrolavadora, @IdNoSerialInput, 800),
+	(@IdProductPropertiesCortasetos, @IdMarcaSelect, 100),
+	(@IdProductPropertiesCortasetos, @IdModeloInput, 200),
+	(@IdProductPropertiesCortasetos, @IdCuchillaSelect, 300),
+	(@IdProductPropertiesCortasetos, @IdProtectorSelect, 400),
+	(@IdProductPropertiesCortasetos, @IdDesarmadoSelect, 500),
+	(@IdProductPropertiesCortasetos, @IdNoSerialInput, 600),
+	(@IdProductPropertiesFumigadoraManual, @IdMarcaAddRCSelect, 100),
+	(@IdProductPropertiesFumigadoraManual, @IdModeloInput, 200),
+	(@IdProductPropertiesFumigadoraManual, @IdLanzaSelect, 300),
+	(@IdProductPropertiesFumigadoraManual, @IdMangueraSelect, 400),
+	(@IdProductPropertiesFumigadoraManual, @IdPalancaSelect, 500),
+	(@IdProductPropertiesFumigadoraManual, @IdDesarmadoSelect, 600),
+	(@IdProductPropertiesFumigadoraManual, @IdCorreasSelect, 700),
+	(@IdProductPropertiesFumigadoraManual, @IdNoSerialInput, 800),
+	(@IdProductPropertiesFumigadoraMotor, @IdMarcaAddRCSelect, 100),
+	(@IdProductPropertiesFumigadoraMotor, @IdModeloInput, 200),
+	(@IdProductPropertiesFumigadoraMotor, @IdLanzaSelect, 300),
+	(@IdProductPropertiesFumigadoraMotor, @IdTuboAspersorSelect, 400),
+	(@IdProductPropertiesFumigadoraMotor, @IdRejillaSelect, 500),
+	(@IdProductPropertiesFumigadoraMotor, @IdCorreasSelect, 600),
+	(@IdProductPropertiesFumigadoraMotor, @IdEmpunaduraManoSelect, 700),
+	(@IdProductPropertiesFumigadoraMotor, @IdDesarmadoSelect, 800),
+	(@IdProductPropertiesFumigadoraMotor, @IdNoSerialInput, 900),
+	(@IdProductPropertiesFumigadoraEstacionaria, @IdMarcaAddYamSelect, 100),
+	(@IdProductPropertiesFumigadoraEstacionaria, @IdModeloInput, 200),
+	(@IdProductPropertiesFumigadoraEstacionaria, @IdMangSuccionSelect, 300),
+	(@IdProductPropertiesFumigadoraEstacionaria, @IdMangRetornoSelect, 400),
+	(@IdProductPropertiesFumigadoraEstacionaria, @IdNoSerialInput, 500),
+	(@IdProductPropertiesBomba, @IdMarcaAddComplexSelect, 100),
+	(@IdProductPropertiesBomba, @IdModeloInput, 200),
+	(@IdProductPropertiesBomba, @IdNoSerialInput, 300),
+	(@IdProductPropertiesGenerador, @IdMarcaAddComplexSelect, 100),
+	(@IdProductPropertiesGenerador, @IdModeloInput, 200),
+	(@IdProductPropertiesGenerador, @IdNoSerialInput, 300),
+	(@IdProductPropertiesMotor, @IdMarcaAddComplexSelect, 100),
+	(@IdProductPropertiesMotor, @IdModeloInput, 200),
+	(@IdProductPropertiesMotor, @IdNoSerialInput, 300);
+
+INSERT INTO [tblProductProperties_PropertyOptions]([IdProductProperty], [IdProductPropertyOption], [Order]) VALUES
+	(@IdMarcaSelect, @IdStihl, 100),
+	(@IdMarcaSelect, @IdOtra, 200),
+	(@IdEspadaSelect, @IdSi, 100),
+	(@IdEspadaSelect, @IdNo, 200),
+	(@IdProtectorSelect, @IdSi, 100),
+	(@IdProtectorSelect, @IdNo, 200),
+	(@IdCadenaSelect, @IdSi, 100),
+	(@IdCadenaSelect, @IdNo, 200),
+	(@IdDesarmadoSelect, @IdSi, 100),
+	(@IdDesarmadoSelect, @IdNo, 200),
+	(@IdTuboSopladorSelect, @IdSi, 100),
+	(@IdTuboSopladorSelect, @IdNo, 200),
+	(@IdCuchillaSelect, @IdSi, 100),
+	(@IdCuchillaSelect, @IdNo, 200),
+	(@IdYoyoSelect, @IdSi, 100),
+	(@IdYoyoSelect, @IdNo, 200),
+	(@IdArnesSelect, @IdSi, 100),
+	(@IdArnesSelect, @IdNo, 200),
+	(@IdPistolaSelect, @IdSi, 100),
+	(@IdPistolaSelect, @IdNo, 200),
+	(@IdLanzaSelect, @IdSi, 100),
+	(@IdLanzaSelect, @IdNo, 200),
+	(@IdMangueraSelect, @IdSi, 100),
+	(@IdMangueraSelect, @IdNo, 200),
+	(@IdBoquillasSelect, @IdSi, 100),
+	(@IdBoquillasSelect, @IdNo, 200),
+	(@IdPalancaSelect, @IdSi, 100),
+	(@IdPalancaSelect, @IdNo, 200),
+	(@IdTuboAspersorSelect, @IdSi, 100),
+	(@IdTuboAspersorSelect, @IdNo, 200),
+	(@IdRejillaSelect, @IdSi, 100),
+	(@IdRejillaSelect, @IdNo, 200),
+	(@IdEmpunaduraManoSelect, @IdSi, 100),
+	(@IdEmpunaduraManoSelect, @IdNo, 200),
+	(@IdMangSuccionSelect, @IdSi, 100),
+	(@IdMangSuccionSelect, @IdNo, 200),
+	(@IdMangRetornoSelect, @IdSi, 100),
+	(@IdMangRetornoSelect, @IdNo, 200),
+	(@IdCorreasSelect, @IdSi, 100),
+	(@IdCorreasSelect, @IdNo, 200),
+	(@IdMarcaAddSelect, @IdStihl, 100),
+	(@IdMarcaAddSelect, @IdAnnoviReverberi, 200),
+	(@IdMarcaAddSelect, @IdOtra, 300),
+	(@IdMarcaAddRCSelect, @IdStihl, 100),
+	(@IdMarcaAddRCSelect, @IdRoyalCondor, 200),
+	(@IdMarcaAddRCSelect, @IdOtra, 300),
+	(@IdMarcaAddYamSelect, @IdYamaha, 100),
+	(@IdMarcaAddYamSelect, @IdRoyalCondor, 200),
+	(@IdMarcaAddYamSelect, @IdOtra, 300),
+	(@IdMarcaAddComplexSelect, @IdSolan, 100),
+	(@IdMarcaAddComplexSelect, @IdPowerMaster, 200),
+	(@IdMarcaAddComplexSelect, @IdElite, 300),
+	(@IdMarcaAddComplexSelect, @IdYamaha, 400),
+	(@IdMarcaAddComplexSelect, @IdEdo, 500),
+	(@IdMarcaAddComplexSelect, @IdOtra, 600);

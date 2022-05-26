@@ -8,7 +8,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     $scope.aLanguage = aLanguage;
 
     $scope.cotizacion = {
-        tipo: { 'Name': 'C-1-Cotización' },
+        tipoN: 'C-1-Cotización',
         numero: '',
         cliente: '',
         fechaElaboracion: moment().format('YYYY/MM/DD'),
@@ -27,6 +27,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     $scope.newProduct = {
         descripcion: '',
         productId: null,
+        productoId: null,
         cantidad: 1,
         available_quantity: 0,
         valorunitario: 0,
@@ -68,6 +69,27 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         });
     };
 
+    $scope.productProperties = [];
+    $scope.productPropertyOptions = [];
+
+    $scope.loadProductInformation = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetProductInformationToFill",
+            "StoredParams": []
+        };
+
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    $scope.productProperties = angular.copy(response.Value[0].DataMapped);
+                    $scope.productPropertyOptions = angular.copy(response.Value[1].DataMapped);
+                }
+            }
+        });
+    };
+
     $scope.loadProducts = function () {
         var dataSP = {
             "StoredProcedureName": "GetProducts",
@@ -92,7 +114,68 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     };
 
     $scope.saveCotizacion = function () {
+        var aDataProducts = [];
+        var aDataProductsValues = [];
+        $.each($scope.dataGridProduct, function (i, objProduct) {
+            var productTempId = new Date().getTime();
+            var productValue = objProduct.productPropertiesSelected.map(function (objProperty) {
+                var ValueOpt = objProperty.PropertyHT === "True" ? (typeof objProperty.Value === 'undefined' ? '' : objProperty.Value) : objProperty.Value.IdProductPropertyOption;
+                return {
+                    productTempId: productTempId,
+                    IdProduct: objProperty.IdProduct,
+                    IdProductProperty: objProperty.IdProductProperty,
+                    Value: ValueOpt
+                };
+            });
+            var newProduct = {
+                productTempId: productTempId,
+                cantidad: objProduct.cantidad,
+                descripcion: objProduct.descripcion,
+                descuento: objProduct.descuento,
+                impuestoretencion: objProduct.impuestoretencion,
+                productoId: objProduct.productoId,
+                taxId: objProduct.taxId,
+                taxes: objProduct.taxes,
+                totalProducto: objProduct.totalProducto,
+                valorunitario: objProduct.valorunitario,
+            };
+            aDataProducts.push(newProduct);
+            aDataProductsValues.push(productValue);
+        });
         debugger;
+
+        var dataSP = {
+            "StoredProcedureName": "SaveCotizacion",
+            "StoredParams": [{
+                Name: "jsonCotizacion",
+                Value: JSON.stringify($scope.cotizacion)
+            }, {
+                Name: "jsonProductos",
+                Value: JSON.stringify($scope.aDataProducts)
+            }, {
+                Name: "jsonValoresProductos",
+                Value: JSON.stringify($scope.aDataProductsValues)
+            }]
+        };
+
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Value.length === 0) {
+                    GeneralService.showToastR({
+                        body: aLanguage.saveSuccessful,
+                        type: 'success'
+                    });
+                    $scope.currentUser = {};
+                } else {
+                    GeneralService.showToastR({
+                        body: aLanguage[response.GeneralError],
+                        type: 'error'
+                    });
+                }
+            }
+        });
     };
 
     $scope.validateDataGridProduct = function () {
@@ -135,6 +218,23 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         $scope.recalculateTotal();
     };
 
+    $scope.selectedProduct = -1;
+
+    $scope.fillProduct = function (rowIndex) {
+        $scope.dataGridProduct[rowIndex];
+        $scope.selectedProduct = rowIndex;
+        var productPropertiesSelected = angular.copy($scope.productProperties.filter(p => p.IdProduct === $scope.dataGridProduct[rowIndex].productoId));
+        if (productPropertiesSelected.length === 0)
+            productPropertiesSelected = angular.copy($scope.productProperties.filter(p => p.IdProduct === ''));
+
+        $.each(productPropertiesSelected, function (i, objProp) {
+            objProp.Options = angular.copy($scope.productPropertyOptions.filter(o => o.IdProductProperty === objProp.IdProductProperty));
+        });
+
+        $scope.dataGridProduct[rowIndex].productPropertiesSelected = angular.copy(productPropertiesSelected);
+        $('#modalFillDataProduct').modal('show');
+    };
+
     $scope.selectCliente = function () {
         $scope.contactos = angular.copy($scope.customerList.filter(p => p.id === $scope.cotizacion.cliente)[0]);
     };
@@ -143,6 +243,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
 
     $scope.setProduct = function (product) {
         var selectedProduct = $scope.productList.filter(p => p.id === product.productoId)[0];
+        product.ProductName = selectedProduct.name;
         product.available_quantity = parseFloat(selectedProduct.available_quantity);
         var taxesL = JSON.parse(selectedProduct.taxes);
         if (taxesL.length === 0)
@@ -194,6 +295,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     function init() {
         $scope.loadCustomers();
         $scope.loadProducts();
+        $scope.loadProductInformation();
     }
 
     $(document).ready(function () {

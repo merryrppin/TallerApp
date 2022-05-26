@@ -108,6 +108,9 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductPropertyType.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductProperties.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductPropertyOptions.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductPropertyType_ProductProperties.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductProperties_PropertyOptions.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetProductInformationToFill.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Taller.refactorlog" />

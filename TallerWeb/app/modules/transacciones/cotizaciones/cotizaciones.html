@@ -9,7 +9,7 @@
         <div class="form-group row">
             <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Tipo</label><br />
-                {{cotizacion.tipo.Name}}
+                {{cotizacion.tipoN}}
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Número:</label>
@@ -94,7 +94,10 @@
                                 </select>
                             </td>
                             <td>{{product.totalProducto}}</td>
-                            <td><button style='height: 1rem;' data-toggle='tooltip' title='Eliminar producto' class='btn btn-sm btn-icon' ng-click='removeProducto($index)'><i class='fa fa-trash'></i></button></td>
+                            <td>
+                                <button type="button" data-ng-disabled="product.productoId == null" style='height: 1rem;' data-toggle='tooltip' title='Actualizar producto' class='btn btn-sm btn-icon' ng-click='fillProduct($index)'><i class='fa fa-edit'></i></button>
+                                <button type="button" style='height: 1rem;' data-toggle='tooltip' title='Eliminar producto' class='btn btn-sm btn-icon' ng-click='removeProducto($index)'><i class='fa fa-trash'></i></button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -112,3 +115,35 @@
         </div>
     </div>
 </form>
+
+<div class="modal fade" id="modalFillDataProduct" aria-labelledby="modalFillDataProductLabel" tabindex="-1" role="dialog" aria-modal="true" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Llenar información del producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="frmFillProduct">
+                    <div class="form-group">
+                        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <h3 class="modal-title">{{dataGridProduct[selectedProduct].ProductName}}</h3>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 form-group validated" data-ng-repeat="productProperty in dataGridProduct[selectedProduct].productPropertiesSelected">
+                            <label class="">{{productProperty.TextProperty}}*:</label>
+                            <input data-ng-if="productProperty.PropertyHT === 'True'" data-ng-model="productProperty.Value" type="text" class="form-control" placeholder="{{productProperty.TextProperty}}">
+                            <select data-ng-if="productProperty.PropertyHO === 'True'" data-ng-model="productProperty.Value" class="form-control" data-ng-init="productProperty.Value = productProperty.Options[0]"
+                                    data-ng-options="optionProp.TextOption for optionProp in productProperty.Options">
+                            </select>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="fillProduct()">Actualizar</button>
+            </div>-->
+        </div>
+    </div>
+</div>

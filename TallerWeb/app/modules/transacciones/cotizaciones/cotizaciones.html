@@ -55,7 +55,7 @@
                 <textarea id="encabezado" name="encabezado" data-ng-model="cotizacion.encabezado" class="form-control" rows="4"></textarea>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: right;">
-                <button class="btn btn-primary" data-ng-click="addProduct()">Añadir producto</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addProduct()">Añadir producto</button>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                 <table class="table table-striped">
@@ -85,7 +85,7 @@
                             </td>
                             <td><textarea data-ng-model="product.descripcion" class="form-control" rows="1"></textarea></td>
                             <td>{{product.available_quantity}}</td>
-                            <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="0" step="1" data-ng-model="product.cantidad" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                            <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="1" step="1" data-ng-model="product.cantidad" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                             <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.valorunitario" class="form-control"></td>
                             <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.descuento" class="form-control"></td>
                             <td>

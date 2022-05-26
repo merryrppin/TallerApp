@@ -12,12 +12,12 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         numero: '',
         cliente: '',
         fechaElaboracion: moment().format('YYYY/MM/DD'),
-        contacto: '',
+        contacto: 'contacto',//test
         nombreContacto: '',
         responsableCotizacion: GeneralService.userLogin.UserCompleteName,
         responsableCotizacionId: GeneralService.userLogin.UserId,
-        encabezado: '',
-        condicionesComerciales: '',
+        encabezado: 'encabezado',//test
+        condicionesComerciales: 'condiciones com',//test
         totalBruto: '0.00',
         descuentos: '0.00',
         subTotal: '0.00',
@@ -27,7 +27,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     $scope.newProduct = {
         descripcion: '',
         productId: null,
-        cantidad: 0,
+        cantidad: 1,
         available_quantity: 0,
         valorunitario: 0,
         descuento: 0,
@@ -55,7 +55,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
             success: function (response) {
                 if (response.Exception === null) {
                     $scope.customerList = response.Value[0].DataMapped.map(function (objCustomer) {
-                        objCustomer.name = objCustomer.name.replace('["', '').replace('"]', '');
+                        objCustomer.name = objCustomer.name.replace('["', '').replace('"]', '').replace('","', ' ');
                         var aContacts = [];
                         if (objCustomer.contacts != null && objCustomer.contacts != '') {
                             aContacts = JSON.parse(objCustomer.contacts);
@@ -86,22 +86,26 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     };
 
     $rootScope.saveBtnFunction = function () {
-        if ($("#frmCotizacion").valid()) {
-            if ($scope.userIdSelected !== -1)
-                $scope.saveUser();
-            else
-                $scope.encryptPassword($scope.currentUser.Password);
+        if ($("#frmCotizacion").valid() && $scope.validateDataGridProduct()) {
+            $scope.saveCotizacion();
         }
     };
 
+    $scope.saveCotizacion = function () {
+        debugger;
+    };
+
     $scope.validateDataGridProduct = function () {
+        var returnValue = true;
         if ($scope.dataGridProduct.length > 0) {
             $.each($scope.dataGridProduct, function (i, objProduct) {
-                if (product.productoId === null || product.productoId === "" || product.cantidad <= 0) {
+                if (typeof objProduct.productoId === 'undefined' || objProduct.productoId === null || objProduct.productoId === "" || objProduct.cantidad <= 0) {
                     GeneralService.showToastR({
                         body: "Todos los productos agregados, deben tener una cantidad correcta",
                         type: 'error'
                     });
+                    returnValue = false;
+                    return;
                 }
             });
 
@@ -110,7 +114,9 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                 body: "Debe agregar al menos 1 producto",
                 type: 'error'
             });
+            returnValue = false;
         }
+        return returnValue;
     };
 
     $scope.addProduct = function () {
@@ -206,9 +212,9 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                     required: true,
                     dateISO: true
                 },
-                contacto: {
-                    required: true
-                },
+                //contacto: {
+                //    required: true
+                //},
                 //encabezado: {
                 //    required: true
                 //},

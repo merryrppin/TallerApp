@@ -105,6 +105,9 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblCotizaciones.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductosCotizacion.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\SaveCotizacion.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductPropertyType.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductProperties.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductPropertyOptions.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Taller.refactorlog" />

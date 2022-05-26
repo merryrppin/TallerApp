@@ -28,7 +28,7 @@ SET IDENTITY_INSERT [param].[tblMenu] OFF
 --[erp].[dbo].[tblUser]
 INSERT INTO [dbo].[tblUsers](UserFirstName, UserLastName, UserEmail, Login, Password) VALUES('Wilmar', 'González', 'wilmar.gonzalez.franco@hotmail.com', 'wgonzalez', 'd2dvbnphbGV6');
 
-INSERT INTO tblFiscalResponsibilities (code,[name])
+INSERT INTO tblFiscalResponsabilities (code,[name])
 VALUES ('R-99-PN','No Aplica - Otros*'),
 ('O-13','Gran contribuyente'),
 ('O-15','Autorretenedor'),

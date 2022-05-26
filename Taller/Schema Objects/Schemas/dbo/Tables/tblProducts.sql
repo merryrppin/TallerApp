@@ -6,7 +6,7 @@
     [type] VARCHAR(50) NOT NULL, 
     [stock_control] BIT NOT NULL, 
     [active] BIT NOT NULL,
-    [tax_incluided] BIT NOT NULL, 
+    [tax_included] BIT NOT NULL, 
     [taxes] NVARCHAR(MAX) NULL, 
     [available_quantity] DECIMAL(18, 8) NULL
     

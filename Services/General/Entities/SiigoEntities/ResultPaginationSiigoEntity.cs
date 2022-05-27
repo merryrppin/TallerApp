@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Services.General.Entities.SiigoEntities
 {
-    public class ResultSiigoEntity
+    public class ResultPaginationSiigoEntity
     {
-        public object results { get; set; }
-        public ResultPaginationSiigoEntity pagination { get; set; }
+        public int page { get; set; }
+        public int page_size { get; set; }
+        public int total_results { get; set; }
     }
 }

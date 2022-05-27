@@ -63,6 +63,7 @@ function listUsersController($scope, $location, GeneralService) {
     };
 
     $scope.modUserId = function (UserId) {
+        $('[data-toggle="tooltip"]').tooltip('dispose');
         GeneralService.userId = UserId;
         $location.path('/addUser');
     };

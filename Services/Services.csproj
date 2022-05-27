@@ -68,6 +68,7 @@
     <Compile Include="General\Constants\Constants.cs" />
     <Compile Include="General\Entities\GeneralResponse.cs" />
     <Compile Include="General\Entities\LoginEntities\LoginEntity.cs" />
+    <Compile Include="General\Entities\SiigoEntities\ResultPaginationSiigoEntity.cs" />
     <Compile Include="General\Entities\SiigoEntities\ResultSiigoEntity.cs" />
     <Compile Include="General\Entities\StoredEntities\StoredObjectParams.cs" />
     <Compile Include="General\Entities\StoredEntities\StoredObjectResponse.cs" />

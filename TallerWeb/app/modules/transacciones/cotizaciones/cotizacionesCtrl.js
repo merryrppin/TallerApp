@@ -200,14 +200,20 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         }
         return returnValue;
     };
-
+    $scope.rowPosition = 0;
     $scope.addProduct = function () {
         rowPosition = $scope.dataGridProduct.length;
-        $scope.dataGridProduct.push(angular.copy($scope.newProduct));
+        var newProductTemp = angular.copy($scope.newProduct);
+        newProductTemp.rowPosition = $scope.rowPosition;
+        $scope.rowPosition++;
+        $scope.dataGridProduct.push(newProductTemp);
         $('[data-toggle="tooltip"]').tooltip();
-        $('#slProducto' + rowPosition).select2({
-            placeholder: "Seleccione una opción"
-        });
+
+        setTimeout(function () {
+            $('#slProducto' + newProductTemp.rowPosition).select2({
+                placeholder: "Seleccione una opción"
+            });
+        }, 300);
     };
 
     $scope.removeProducto = function (rowIndex) {
@@ -324,9 +330,9 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                 //encabezado: {
                 //    required: true
                 //},
-                condicionesComerciales: {
-                    required: true
-                }
+                //condicionesComerciales: {
+                //    required: true
+                //}
             }
         });
     });

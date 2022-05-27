@@ -4,7 +4,7 @@
     [type] VARCHAR(50) NOT NULL, 
     [person_type] VARCHAR(50) NOT NULL, 
     [id_type] NVARCHAR(MAX) NOT NULL, 
-    [identification] BIGINT NOT NULL, 
+    [identification] VARCHAR(50) NOT NULL, 
     [branch_office] INT NOT NULL, 
     [check_digit] INT NOT NULL, 
     [name] NVARCHAR(MAX) NOT NULL, 

@@ -10,7 +10,7 @@ AS
 		[type] VARCHAR(50) '$.type',
 		person_type VARCHAR(50) '$.person_type',
 		id_type NVARCHAR(MAX) AS JSON,
-		identification BIGINT '$.identification',
+		identification VARCHAR(50) '$.identification',
 		branch_office INT '$.branch_office',
 		check_digit INT '$.check_digit',
 		[name] NVARCHAR(MAX) AS JSON,
@@ -22,6 +22,7 @@ AS
 		phones NVARCHAR(MAX) AS JSON,
 		contacts NVARCHAR(MAX) AS JSON,
 		comments NVARCHAR(MAX) AS JSON)
+	WHERE [type] IS NOT NULL AND [identification] IS NOT NULL
 
 	MERGE tblCustomers AS tblc
 	USING (SELECT * FROM #tmpCustomers) AS SOURCE

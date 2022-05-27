@@ -230,23 +230,43 @@ namespace Services.General
         }
         private async Task LoadCustomersSiigo(LoginEntity loginResp)
         {
+            int currentPage = 1;
+            int pageSize = 100;
+            int currentSize = 100;
+            int totalResults = 0;
             string JsonCustomers = "";
-            string url = string.Format("{0}v1/customers", UrlSiigo);
+            string originalUrl = "{0}v1/customers?page={1}&page_size={2}";
+
             HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
 
             using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/customers"))
             {
-                client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
-                using (HttpContent content = request.Content)
+                do
                 {
-                    HttpResponseMessage response = (await client.GetAsync(url));
-                    string contents = await response.Content.ReadAsStringAsync();
-                    ResultSiigoEntity objCustomers = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
+                    string url = string.Format(originalUrl, UrlSiigo, currentPage.ToString(), pageSize.ToString());
+                    using (HttpContent content = request.Content)
+                    {
+                        HttpResponseMessage response = (await client.GetAsync(url));
+                        string contents = await response.Content.ReadAsStringAsync();
+                        ResultSiigoEntity objCustomers = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
 
-                    JsonCustomers = JsonConvert.SerializeObject(objCustomers.results);
-                }
+                        JsonCustomers = JsonConvert.SerializeObject(objCustomers.results);
+                        if(currentPage == 1)
+                            totalResults = objCustomers.pagination.total_results;
+
+                    }
+                    currentPage++;
+                    currentSize += pageSize;
+                    SaveOrUpdateCustomers(JsonCustomers);
+                } while (currentSize < totalResults);
+
+
             }
+        }
 
+        private void SaveOrUpdateCustomers(string JsonCustomers)
+        {
             StoredObjectParams StoredObjectParams = new StoredObjectParams
             {
                 StoredProcedureName = "SaveOrUpdateCustomers",

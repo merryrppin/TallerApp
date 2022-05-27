@@ -74,11 +74,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="product in dataGridProduct">
+                        <tr ng-repeat="product in dataGridProduct">                            
                             <td>{{$index + 1}}</td>
                             <td>
                                 <div class="form-group" style="height:30px">
-                                    <select id="slProducto{{$index}}" data-ng-model="product.productoId" data-ng-change="setProduct(product, $index)" class="form-control" style="width:100%">
+                                    <select id="slProducto{{product.rowPosition}}" data-ng-model="product.productoId" data-ng-change="setProduct(product, $index)" class="form-control" style="width:100%">
                                         <option data-ng-repeat="itemProducto in productList" value="{{itemProducto.id}}" data-select2-id="{{itemProducto.id}}">{{itemProducto.name}}</option>
                                     </select>
                                 </div>
@@ -89,7 +89,7 @@
                             <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.valorunitario" class="form-control"></td>
                             <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.descuento" class="form-control"></td>
                             <td>
-                                <select id="slProducto{{$index}}" data-ng-disabled="product.productoId == null" data-ng-model="product.taxId" data-ng-change="setTax(product)" class="form-control" style="width:100%">
+                                <select id="slImpuesto{{product.rowPosition}}" data-ng-disabled="product.productoId == null" data-ng-model="product.taxId" data-ng-change="setTax(product)" class="form-control" style="width:100%">
                                     <option data-ng-repeat="taxiItem in product.taxesList" value="{{taxiItem.id}}" data-select2-id="{{taxiItem.id}}">{{taxiItem.name}}</option>
                                 </select>
                             </td>

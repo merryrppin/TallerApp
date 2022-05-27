@@ -1302,7 +1302,7 @@ INSERT INTO [tblProductPropertyOptions] ([IdProductPropertyOption], [TextOption]
 	(@IdAnnoviReverberi, 'Annovi Reverberi', 0),
 	(@IdRoyalCondor, 'Royal Condor', 0),
 	(@IdYamaha, 'Yamaha', 0),
-	(@IdSolan, 'Solan', 0),
+	(@IdSolan, 'Sokan', 0),
 	(@IdPowerMaster, 'Power Master', 0),
 	(@IdElite, 'Elite', 0),
 	(@IdEdo, 'EDO', 0);

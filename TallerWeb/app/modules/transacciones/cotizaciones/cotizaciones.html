@@ -78,7 +78,7 @@
                             <td>{{$index + 1}}</td>
                             <td>
                                 <div class="form-group" style="height:30px">
-                                    <select id="slProducto{{$index}}" data-ng-model="product.productoId" data-ng-change="setProduct(product)" class="form-control" style="width:100%">
+                                    <select id="slProducto{{$index}}" data-ng-model="product.productoId" data-ng-change="setProduct(product, $index)" class="form-control" style="width:100%">
                                         <option data-ng-repeat="itemProducto in productList" value="{{itemProducto.id}}" data-select2-id="{{itemProducto.id}}">{{itemProducto.name}}</option>
                                     </select>
                                 </div>
@@ -95,7 +95,7 @@
                             </td>
                             <td>{{product.totalProducto}}</td>
                             <td>
-                                <button type="button" data-ng-disabled="product.productoId == null" style='height: 1rem;' data-toggle='tooltip' title='Actualizar producto' class='btn btn-sm btn-icon' ng-click='fillProduct($index)'><i class='fa fa-edit'></i></button>
+                                <button type="button" data-ng-disabled="product.productoId == null" style='height: 1rem;' data-toggle='tooltip' title='Actualizar producto' class='btn btn-sm btn-icon' ng-click='openModal($index)'><i class='fa fa-edit'></i></button>
                                 <button type="button" style='height: 1rem;' data-toggle='tooltip' title='Eliminar producto' class='btn btn-sm btn-icon' ng-click='removeProducto($index)'><i class='fa fa-trash'></i></button>
                             </td>
                         </tr>

@@ -12,12 +12,12 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         numero: '',
         cliente: '',
         fechaElaboracion: moment().format('YYYY/MM/DD'),
-        contacto: 'contacto',//test
+        contacto: -1,//test
         nombreContacto: '',
         responsableCotizacion: GeneralService.userLogin.UserCompleteName,
         responsableCotizacionId: GeneralService.userLogin.UserId,
-        encabezado: 'encabezado',//test
-        condicionesComerciales: 'condiciones com',//test
+        encabezado: '',//test
+        condicionesComerciales: '',//test
         totalBruto: '0.00',
         descuentos: '0.00',
         subTotal: '0.00',
@@ -140,9 +140,8 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                 valorunitario: objProduct.valorunitario,
             };
             aDataProducts.push(newProduct);
-            aDataProductsValues.push(productValue);
+            aDataProductsValues = angular.copy(productValue);
         });
-        debugger;
 
         var dataSP = {
             "StoredProcedureName": "SaveCotizacion",
@@ -151,10 +150,10 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                 Value: JSON.stringify($scope.cotizacion)
             }, {
                 Name: "jsonProductos",
-                Value: JSON.stringify($scope.aDataProducts)
+                Value: JSON.stringify(aDataProducts)
             }, {
                 Name: "jsonValoresProductos",
-                Value: JSON.stringify($scope.aDataProductsValues)
+                Value: JSON.stringify(aDataProductsValues)
             }]
         };
 
@@ -220,8 +219,13 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
 
     $scope.selectedProduct = -1;
 
+    $scope.openModal = function (rowIndex) {
+        $scope.selectedProduct = rowIndex;
+        $('#modalFillDataProduct').modal('show');
+    };
+
     $scope.fillProduct = function (rowIndex) {
-        $scope.dataGridProduct[rowIndex];
+        //$scope.dataGridProduct[rowIndex];
         $scope.selectedProduct = rowIndex;
         var productPropertiesSelected = angular.copy($scope.productProperties.filter(p => p.IdProduct === $scope.dataGridProduct[rowIndex].productoId));
         if (productPropertiesSelected.length === 0)
@@ -241,7 +245,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
 
     var taxZeroOption = { id: -1, name: "Ninguno", percentage: 0 };
 
-    $scope.setProduct = function (product) {
+    $scope.setProduct = function (product, index) {
         var selectedProduct = $scope.productList.filter(p => p.id === product.productoId)[0];
         product.ProductName = selectedProduct.name;
         product.available_quantity = parseFloat(selectedProduct.available_quantity);
@@ -254,6 +258,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         if (selectedProduct.prices !== "") {
             product.valorunitario = JSON.parse(selectedProduct.prices)[0].price_list[0].value;
         }
+        $scope.fillProduct(index);
     };
 
     $scope.setTax = function (product) {

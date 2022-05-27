@@ -166,7 +166,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                         body: aLanguage.saveSuccessful,
                         type: 'success'
                     });
-                    $scope.currentUser = {};
+                    $location.path('/listUsers');
                 } else {
                     GeneralService.showToastR({
                         body: aLanguage[response.GeneralError],
@@ -225,7 +225,6 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     };
 
     $scope.fillProduct = function (rowIndex) {
-        //$scope.dataGridProduct[rowIndex];
         $scope.selectedProduct = rowIndex;
         var productPropertiesSelected = angular.copy($scope.productProperties.filter(p => p.IdProduct === $scope.dataGridProduct[rowIndex].productoId));
         if (productPropertiesSelected.length === 0)

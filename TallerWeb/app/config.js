@@ -201,6 +201,21 @@
                 }]
             }
         })
+        .state('listCotizaciones', {
+            url: "/listCotizaciones",
+            templateUrl: "app/modules/transacciones/cotizaciones/listCotizaciones.html",
+            controller: "listCotizacionesController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: aLanguage.appName,
+                        files: [
+                            'app/modules/transacciones/cotizaciones/listCotizacionesCtrl.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('404', {
             url: "/404",
             templateUrl: "app/modules/general/error/404.html",

@@ -164,6 +164,8 @@
     <Content Include="app\modules\general\user\listUsersCtrl.js" />
     <Content Include="app\modules\transacciones\cotizaciones\cotizaciones.html" />
     <Content Include="app\modules\transacciones\cotizaciones\cotizacionesCtrl.js" />
+    <Content Include="app\modules\transacciones\cotizaciones\listCotizaciones.html" />
+    <Content Include="app\modules\transacciones\cotizaciones\listCotizacionesCtrl.js" />
     <Content Include="default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="General.html" />

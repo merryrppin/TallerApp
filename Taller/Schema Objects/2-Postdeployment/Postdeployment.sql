@@ -22,7 +22,10 @@ INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId
 
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(16,'Transacciones','','flaticon2-percentage',NULL,500,1,'',0);
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(17,'Cotizaciones','','',16,100,1,'#!/cotizaciones',1);
-INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(18,'Lsita Cotizaciones','','',16,200,1,'#!/listCotizaciones',1);
+INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(18,'Lista Cotizaciones','','',16,200,1,'#!/listCotizaciones',1);
+
+INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(20,'Lista Recepción Productos','','',16,75,1,'#!/listRecepcionProductos',1);
+INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(21,'Recepción Productos','','',16,50,1,'#!/recepcionProductos',1);
 
 SET IDENTITY_INSERT [param].[tblMenu] OFF
 

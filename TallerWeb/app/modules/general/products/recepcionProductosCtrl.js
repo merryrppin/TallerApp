@@ -1,27 +1,20 @@
 ﻿agGrid.initialiseAgGridWithAngular1(angular);
 var module = angular.module(aLanguage.appName, ["agGrid"]);
-module.controller('cotizacionesController', ["$scope", '$rootScope', "$location", "GeneralService", cotizacionesController]);
-function cotizacionesController($scope, $rootScope, $location, GeneralService) {
+module.controller('recepcionProductoController', ["$scope", '$rootScope', "$location", "GeneralService", recepcionProductoController]);
+function recepcionProductoController($scope, $rootScope, $location, GeneralService) {
 
     GeneralService.hideGeneralButtons();
     $rootScope.showSaveButton = true;
     $scope.aLanguage = aLanguage;
 
-    $scope.cotizacion = {
-        tipoN: 'C-1-Cotización',
+    $scope.recepcionProducto = {
+        tipoN: 'R-1-Recepción',
         numero: '',
         cliente: '',
         fechaElaboracion: moment().format('YYYY/MM/DD'),
-        //contacto: -1,//test
-        nombreContacto: '',
-        responsableCotizacion: GeneralService.userLogin.UserCompleteName,
-        responsableCotizacionId: GeneralService.userLogin.UserId,
-        encabezado: '',//test
-        condicionesComerciales: '',//test
-        totalBruto: '0.00',
-        descuentos: '0.00',
-        subTotal: '0.00',
-        totalNeto: '0.00',
+        responsableRecepcionProducto: GeneralService.userLogin.UserCompleteName,
+        responsableRecepcionProductoId: GeneralService.userLogin.UserId,
+        notas: '',
     };
 
     $scope.newProduct = {
@@ -29,14 +22,6 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         productId: null,
         productoId: null,
         cantidad: 1,
-        available_quantity: 0,
-        valorunitario: 0,
-        descuento: 0,
-        taxes: 0,
-        impuestoretencion: 0,
-        totalProducto: 0,
-        taxesList: [],
-        taxId: '-1'
     };
 
     $scope.productList = [];
@@ -108,12 +93,16 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     };
 
     $rootScope.saveBtnFunction = function () {
-        if ($("#frmCotizacion").valid() && $scope.validateDataGridProduct()) {
-            $scope.saveCotizacion();
+        if ($("#frmRecepcionProductos").valid() && $scope.validateDataGridProduct()) {
+            $scope.saveRecepcionProductos();
         }
     };
 
-    $scope.saveCotizacion = function () {
+    $rootScope.printBtnFunction = function () {
+        //Print PDF
+    };
+
+    $scope.saveRecepcionProductos = function () {
         var aDataProducts = [];
         var aDataProductsValues = [];
         $.each($scope.dataGridProduct, function (i, objProduct) {
@@ -144,10 +133,10 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         });
 
         var dataSP = {
-            "StoredProcedureName": "SaveCotizacion",
+            "StoredProcedureName": "SaveRecepcionProducto",
             "StoredParams": [{
-                Name: "jsonCotizacion",
-                Value: JSON.stringify($scope.cotizacion)
+                Name: "jsonRecepcionProducto",
+                Value: JSON.stringify($scope.recepcionProducto)
             }, {
                 Name: "jsonProductos",
                 Value: JSON.stringify(aDataProducts)
@@ -166,7 +155,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                         body: aLanguage.saveSuccessful,
                         type: 'success'
                     });
-                    $location.path('/listCotizaciones');
+                    $rootScope.showPrintButton = true;
                 } else {
                     GeneralService.showToastR({
                         body: aLanguage[response.GeneralError],
@@ -221,7 +210,6 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         $('[data-toggle="tooltip"]').tooltip('dispose');
         $scope.dataGridProduct.splice(rowIndex, 1);
         $('[data-toggle="tooltip"]').tooltip();
-        $scope.recalculateTotal();
     };
 
     $scope.selectedProduct = -1;
@@ -249,61 +237,11 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         //$scope.contactos = angular.copy($scope.customerList.filter(p => p.id === $scope.cotizacion.cliente)[0]);
     };
 
-    var taxZeroOption = { id: -1, name: "Ninguno", percentage: 0 };
-
     $scope.setProduct = function (product) {
         var selectedProduct = $scope.productList.filter(p => p.id === product.productoId)[0];
         product.ProductName = selectedProduct.name;
-        product.available_quantity = parseFloat(selectedProduct.available_quantity);
-        var taxesL = JSON.parse(selectedProduct.taxes);
-        if (taxesL.length === 0)
-            taxesL.push(taxZeroOption);
-        product.taxesList = taxesL;
-        product.taxes = taxesL[0].percentage;
-        product.taxId = taxesL[0].id.toString();
-        if (selectedProduct.prices !== "") {
-            product.valorunitario = JSON.parse(selectedProduct.prices)[0].price_list[0].value;
-        }
+
         $scope.fillProduct(product.rowPosition);
-    };
-
-    $scope.setTax = function (product) {
-        product.taxes = product.taxesList.filter(t => t.id.toString() === product.taxId.toString())[0].percentage;
-        $scope.recalculateTotal(product);
-    }
-
-    $scope.removeZeros = function (product) {
-        $("#inputValorUnitario" + product.rowPosition).val(parseFloat(product.valorunitario));
-        $("#inputDescuento" + product.rowPosition).val(parseFloat(product.descuento));
-    };
-
-    $scope.recalculateTotal = function (product) {
-        if (typeof product !== 'undefined') {
-            var valorPorCantidad = product.cantidad * product.valorunitario;
-            var descuentoTotal = product.cantidad * ((product.descuento / 100) * product.valorunitario);
-            var impuestoCargo = product.cantidad * ((product.taxes / 100) * product.valorunitario);
-            var valorTotal = valorPorCantidad - descuentoTotal + impuestoCargo;
-            product.totalProducto = valorTotal;
-            product.descuentoTotal = descuentoTotal;
-            product.impuestoRetencion = descuentoTotal;
-            product.impuestoCargo = impuestoCargo;
-        }
-
-        var totalBruto = 0;
-        var totalDescuentos = 0;
-        var subTotal = 0;
-        var impuestoTotal = 0;
-        $.each($scope.dataGridProduct, function (i, objProduct) {
-            totalBruto += objProduct.cantidad * objProduct.valorunitario;
-            totalDescuentos += objProduct.descuentoTotal;
-            subTotal += totalBruto - totalDescuentos;
-            impuestoTotal += objProduct.impuestoCargo;
-        });
-
-        $scope.cotizacion.totalBruto = totalBruto;
-        $scope.cotizacion.descuentos = totalDescuentos;
-        $scope.cotizacion.subTotal = subTotal;
-        $scope.cotizacion.totalNeto = $scope.cotizacion.subTotal + impuestoTotal;
     };
 
     angular.element(document).ready(init);
@@ -321,7 +259,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         $('.select2cls').select2({
             placeholder: "Seleccione una opción"
         });
-        $("#frmCotizacion").validate({
+        $("#frmRecepcionProductos").validate({
             rules: {
                 cliente: {
                     required: true

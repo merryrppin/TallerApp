@@ -5,7 +5,7 @@
 AS
 BEGIN
 	
-	DECLARE @IdCotizacion UNIQUEIDENTIFIER = (SELECT NEWID());
+	DECLARE @IdCotizacion INT = (SELECT ISNULL(MAX(IdCotizacion), 0) + 1 FROM tblCotizaciones);
 	
 	SELECT [IdCliente], [FechaElaboracion], [IdContactoCliente], [NombreContactoCliente], [IdResponsableCotizacion], [NombreResponsableCotizacion], [Encabezado], [CondicionesComerciales], [TotalBruto], [Descuentos], [SubTotal], [TotalNeto]
 	INTO #tmpCotizacion

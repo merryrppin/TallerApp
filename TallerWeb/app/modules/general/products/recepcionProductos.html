@@ -1,15 +1,15 @@
 ﻿<div class="kt-portlet__head">
     <div class="kt-portlet__head-label">
-        <h3 class="kt-portlet__head-title">Nueva Cotización</h3>
+        <h3 class="kt-portlet__head-title">Recepción productos</h3>
     </div>
 </div>
 
-<form class="kt-form kt-form--label-right" autocomplete="off" ng-submit="saveCotizacion()" id="frmCotizacion">
+<form class="kt-form kt-form--label-right" autocomplete="off" ng-submit="saveRecepcionProductos()" id="frmRecepcionProductos">
     <div class="kt-portlet__body">
         <div class="form-group row">
             <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Tipo</label><br />
-                {{cotizacion.tipoN}}
+                {{recepcionProducto.tipoN}}
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Número:</label>
@@ -18,7 +18,7 @@
             <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Clientes:</label>
                 <div class="input-group" style="height:30px">
-                    <select data-ng-model="cotizacion.cliente" id="cliente" name="cliente" class="form-control select2cls" data-ng-change="selectCliente()">
+                    <select data-ng-model="recepcionProducto.cliente" id="cliente" name="cliente" class="form-control select2cls" data-ng-change="selectCliente()">
                         <option data-ng-repeat="customer in customerList" value="{{customer.id}}" data-select2-id="{{customer.id}}">{{customer.name}}</option>
                     </select>
                     <div class="input-group-append">
@@ -29,26 +29,19 @@
             <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Fecha de elaboración</label>
                 <div class="input-group date">
-                    <input type="text" class="form-control datepicker" readonly="" data-ng-model="cotizacion.fechaElaboracion" id="fechaElaboracion" name="fechaElaboracion">
+                    <input type="text" class="form-control datepicker" readonly="" data-ng-model="recepcionProducto.fechaElaboracion" id="fechaElaboracion" name="fechaElaboracion">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="la la-calendar glyphicon-th"></i></span>
                     </div>
                 </div>
             </div>
-            <!--<div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
-                <label>Contacto:</label>
-                <div class="input-group" style="height:30px">
-                    <select data-ng-disabled="cotizacion.cliente == ''" data-ng-model="cotizacion.contacto" id="contacto" name="contacto" class="form-control select2cls" data-ng-change="selectContacto()">
-                        <option data-ng-repeat="contactoItem in contactos" data-select2-id="{{contactoItem.id}}">{{contactoItem.name}}</option>
-                    </select>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="la la-search"></i></span>
-                    </div>
-                </div>
-            </div>-->
             <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Responsable de la cotización</label><br />
-                {{cotizacion.responsableCotizacion}}
+                {{recepcionProducto.responsableRecepcionProducto}}
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 form-group validated">
+                <label>Encabezado:</label>
+                <textarea id="encabezado" name="encabezado" data-ng-model="recepcionProducto.encabezado" class="form-control" rows="4"></textarea>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: right;">
                 <button type="button" class="btn btn-primary" data-ng-click="addProduct()">Añadir producto</button>
@@ -60,12 +53,7 @@
                             <th>#</th>
                             <th style="min-width:300px">Producto</th>
                             <th>Descripción</th>
-                            <th>Disponible</th>
                             <th>Cant</th>
-                            <th>Valor Unitario</th>
-                            <th>% Desc.</th>
-                            <th>Impuesto Cargo</th>
-                            <th>Valor Total</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -81,16 +69,7 @@
                                 </div>
                             </td>
                             <td><textarea data-ng-model="product.descripcion" class="form-control" rows="1"></textarea></td>
-                            <td>{{product.available_quantity}}</td>
-                            <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="1" step="1" data-ng-model="product.cantidad" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
-                            <td><input id="inputValorUnitario{{product.rowPosition}}" type="number" data-ng-disabled="product.productoId == null" data-ng-blur="removeZeros(product)" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.valorunitario" class="form-control"></td>
-                            <td><input id="inputDescuento{{product.rowPosition}}" type="number" data-ng-disabled="product.productoId == null" data-ng-blur="removeZeros(product)" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.descuento" class="form-control"></td>
-                            <td>
-                                <select id="slImpuesto{{product.rowPosition}}" data-ng-disabled="product.productoId == null" data-ng-model="product.taxId" data-ng-change="setTax(product)" class="form-control" style="width:100%">
-                                    <option data-ng-repeat="taxiItem in product.taxesList" value="{{taxiItem.id}}" data-select2-id="{{taxiItem.id}}">{{taxiItem.name}}</option>
-                                </select>
-                            </td>
-                            <td>{{product.totalProducto}}</td>
+                            <td><input type="number" data-ng-disabled="product.productoId == null" min="1" step="1" data-ng-model="product.cantidad" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                             <td>
                                 <button type="button" data-ng-disabled="product.productoId == null" style='height: 1rem;' data-toggle='tooltip' title='Actualizar producto' class='btn btn-sm btn-icon' ng-click='openModal($index)'><i class='fa fa-edit'></i></button>
                                 <button type="button" style='height: 1rem;' data-toggle='tooltip' title='Eliminar producto' class='btn btn-sm btn-icon' ng-click='removeProducto($index)'><i class='fa fa-trash'></i></button>
@@ -98,12 +77,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: right;">
-                Total Bruto: {{cotizacion.totalBruto}}<br />
-                Descuentos: {{cotizacion.descuentos}}<br />
-                Subtotal: {{cotizacion.subTotal}}<br />
-                <h4><b>Total Neto: {{cotizacion.totalNeto}}</b></h4>
             </div>
         </div>
     </div>

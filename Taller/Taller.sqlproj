@@ -112,6 +112,8 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductProperties_PropertyOptions.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetProductInformationToFill.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductosCotizacionValues.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblAccounting.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetCotizaciones.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Taller.refactorlog" />

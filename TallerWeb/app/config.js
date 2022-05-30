@@ -216,6 +216,21 @@
                 }]
             }
         })
+        .state('comprobantes', {
+            url: "/comprobantes",
+            templateUrl: "app/modules/transacciones/comprobantes/comprobantes.html",
+            controller: "comprobantesController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: aLanguage.appName,
+                        files: [
+                            'app/modules/transacciones/comprobantes/comprobantesCtrl.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('404', {
             url: "/404",
             templateUrl: "app/modules/general/error/404.html",

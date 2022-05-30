@@ -22,7 +22,7 @@ AS
 		phones NVARCHAR(MAX) AS JSON,
 		contacts NVARCHAR(MAX) AS JSON,
 		comments NVARCHAR(MAX) AS JSON)
-	WHERE [type] IS NOT NULL AND [identification] IS NOT NULL
+	WHERE [identification] IS NOT NULL
 
 	MERGE tblCustomers AS tblc
 	USING (SELECT * FROM #tmpCustomers) AS SOURCE

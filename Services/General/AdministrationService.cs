@@ -252,7 +252,7 @@ namespace Services.General
                         ResultSiigoEntity objCustomers = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
 
                         JsonCustomers = JsonConvert.SerializeObject(objCustomers.results);
-                        if(currentPage == 1)
+                        if (currentPage == 1)
                             totalResults = objCustomers.pagination.total_results;
 
                     }
@@ -264,6 +264,8 @@ namespace Services.General
 
             }
         }
+
+
 
         private void SaveOrUpdateCustomers(string JsonCustomers)
         {
@@ -280,6 +282,41 @@ namespace Services.General
             {
                 throw StoredObjectResponse.Exception;
             }
+        }
+
+        public async Task<string> GetNumberCC(string AccessToken)
+        {
+            string JsonNumberCC = "";
+            try
+            {
+                
+                string originalUrl = "{0}v1/document-types?type=CC";
+
+                HttpClient client = new HttpClient();
+                client.DefaultRequestHeaders.Add("Authorization", AccessToken);
+
+                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/document-types?type=CC"))
+                {
+                    string url = string.Format(originalUrl, UrlSiigo);
+                    using (HttpContent content = request.Content)
+                    {
+                        HttpResponseMessage response = (await client.GetAsync(url));
+                        string contents = await response.Content.ReadAsStringAsync();
+                        ResultSiigoEntity objCustomers = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
+
+                        JsonNumberCC = JsonConvert.SerializeObject(objCustomers.results);
+
+                    }
+
+                }
+            }
+            catch(Exception ex)
+            {
+               var l = ex;
+            }
+
+            return JsonNumberCC;
+
         }
         #endregion
     }

@@ -162,6 +162,8 @@
     <Content Include="app\modules\general\user\addUserCtrl.js" />
     <Content Include="app\modules\general\user\listUsers.html" />
     <Content Include="app\modules\general\user\listUsersCtrl.js" />
+    <Content Include="app\modules\transacciones\comprobantes\comprobantes.html" />
+    <Content Include="app\modules\transacciones\comprobantes\comprobantesCtrl.js" />
     <Content Include="app\modules\transacciones\cotizaciones\cotizaciones.html" />
     <Content Include="app\modules\transacciones\cotizaciones\cotizacionesCtrl.js" />
     <Content Include="app\modules\transacciones\cotizaciones\listCotizaciones.html" />

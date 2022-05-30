@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[tblCustomers]
 (
 	[id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
-    [type] VARCHAR(50) NOT NULL, 
+    [type] VARCHAR(50) NULL, 
     [person_type] VARCHAR(50) NOT NULL, 
     [id_type] NVARCHAR(MAX) NOT NULL, 
     [identification] VARCHAR(50) NOT NULL, 

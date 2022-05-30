@@ -19,5 +19,12 @@ namespace Web.Controllers
         {
             return _administrationService.ExecuteStoredProcedure(StoredObjectParams);
         }
+
+        [HttpPost]
+        [Route("api/GetNumberCC")]
+        public string GetNumberCC(string apiToken)
+        {
+            return _administrationService.GetNumberCC(apiToken).Result;
+        }
     }
 }

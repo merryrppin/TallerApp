@@ -12,7 +12,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         numero: '',
         cliente: '',
         fechaElaboracion: moment().format('YYYY/MM/DD'),
-        contacto: -1,//test
+        //contacto: -1,//test
         nombreContacto: '',
         responsableCotizacion: GeneralService.userLogin.UserCompleteName,
         responsableCotizacionId: GeneralService.userLogin.UserId,
@@ -200,6 +200,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         }
         return returnValue;
     };
+
     $scope.rowPosition = 0;
     $scope.addProduct = function () {
         rowPosition = $scope.dataGridProduct.length;
@@ -245,12 +246,12 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     };
 
     $scope.selectCliente = function () {
-        $scope.contactos = angular.copy($scope.customerList.filter(p => p.id === $scope.cotizacion.cliente)[0]);
+        //$scope.contactos = angular.copy($scope.customerList.filter(p => p.id === $scope.cotizacion.cliente)[0]);
     };
 
     var taxZeroOption = { id: -1, name: "Ninguno", percentage: 0 };
 
-    $scope.setProduct = function (product, index) {
+    $scope.setProduct = function (product) {
         var selectedProduct = $scope.productList.filter(p => p.id === product.productoId)[0];
         product.ProductName = selectedProduct.name;
         product.available_quantity = parseFloat(selectedProduct.available_quantity);
@@ -263,13 +264,18 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         if (selectedProduct.prices !== "") {
             product.valorunitario = JSON.parse(selectedProduct.prices)[0].price_list[0].value;
         }
-        $scope.fillProduct(index);
+        $scope.fillProduct(product.rowPosition);
     };
 
     $scope.setTax = function (product) {
         product.taxes = product.taxesList.filter(t => t.id.toString() === product.taxId.toString())[0].percentage;
         $scope.recalculateTotal(product);
     }
+
+    $scope.removeZeros = function (product) {
+        $("#inputValorUnitario" + product.rowPosition).val(parseFloat(product.valorunitario));
+        $("#inputDescuento" + product.rowPosition).val(parseFloat(product.descuento));
+    };
 
     $scope.recalculateTotal = function (product) {
         if (typeof product !== 'undefined') {
@@ -323,16 +329,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                 fechaElaboracion: {
                     required: true,
                     dateISO: true
-                },
-                //contacto: {
-                //    required: true
-                //},
-                //encabezado: {
-                //    required: true
-                //},
-                //condicionesComerciales: {
-                //    required: true
-                //}
+                }
             }
         });
     });

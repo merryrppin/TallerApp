@@ -3,6 +3,11 @@
         <h3 class="kt-portlet__head-title">Nueva Cotización</h3>
     </div>
 </div>
+<style>
+    .select2{
+        width: 90%;
+    }
+</style>
 
 <form class="kt-form kt-form--label-right" autocomplete="off" ng-submit="saveCotizacion()" id="frmCotizacion">
     <div class="kt-portlet__body">
@@ -35,7 +40,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+            <!--<div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Contacto:</label>
                 <div class="input-group" style="height:30px">
                     <select data-ng-disabled="cotizacion.cliente == ''" data-ng-model="cotizacion.contacto" id="contacto" name="contacto" class="form-control select2cls" data-ng-change="selectContacto()">
@@ -45,14 +50,10 @@
                         <span class="input-group-text"><i class="la la-search"></i></span>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
                 <label>Responsable de la cotización</label><br />
                 {{cotizacion.responsableCotizacion}}
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 form-group validated">
-                <label>Encabezado:</label>
-                <textarea id="encabezado" name="encabezado" data-ng-model="cotizacion.encabezado" class="form-control" rows="4"></textarea>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: right;">
                 <button type="button" class="btn btn-primary" data-ng-click="addProduct()">Añadir producto</button>
@@ -74,20 +75,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="product in dataGridProduct">                            
+                        <tr ng-repeat="product in dataGridProduct">
                             <td>{{$index + 1}}</td>
                             <td>
                                 <div class="form-group" style="height:30px">
-                                    <select id="slProducto{{product.rowPosition}}" data-ng-model="product.productoId" data-ng-change="setProduct(product, $index)" class="form-control" style="width:100%">
+                                    <select id="TslProducto{{product.rowPosition}}" data-ng-model="product.productoId" data-ng-change="setProduct(product)" class="form-control" style="width:100%">
                                         <option data-ng-repeat="itemProducto in productList" value="{{itemProducto.id}}" data-select2-id="{{itemProducto.id}}">{{itemProducto.name}}</option>
                                     </select>
+
                                 </div>
                             </td>
                             <td><textarea data-ng-model="product.descripcion" class="form-control" rows="1"></textarea></td>
                             <td>{{product.available_quantity}}</td>
                             <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="1" step="1" data-ng-model="product.cantidad" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
-                            <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.valorunitario" class="form-control"></td>
-                            <td><input type="number" data-ng-disabled="product.productoId == null" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.descuento" class="form-control"></td>
+                            <td><input id="inputValorUnitario{{product.rowPosition}}" type="number" data-ng-disabled="product.productoId == null" data-ng-blur="removeZeros(product)" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.valorunitario" class="form-control"></td>
+                            <td><input id="inputDescuento{{product.rowPosition}}" type="number" data-ng-disabled="product.productoId == null" data-ng-blur="removeZeros(product)" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.descuento" class="form-control"></td>
                             <td>
                                 <select id="slImpuesto{{product.rowPosition}}" data-ng-disabled="product.productoId == null" data-ng-model="product.taxId" data-ng-change="setTax(product)" class="form-control" style="width:100%">
                                     <option data-ng-repeat="taxiItem in product.taxesList" value="{{taxiItem.id}}" data-select2-id="{{taxiItem.id}}">{{taxiItem.name}}</option>
@@ -107,10 +109,6 @@
                 Descuentos: {{cotizacion.descuentos}}<br />
                 Subtotal: {{cotizacion.subTotal}}<br />
                 <h4><b>Total Neto: {{cotizacion.totalNeto}}</b></h4>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 form-group validated">
-                <label>Condiciones Comerciales:</label>
-                <textarea id="condicionesComerciales" name="condicionesComerciales" data-ng-model="cotizacion.condicionesComerciales" class="form-control" rows="4"></textarea>
             </div>
         </div>
     </div>

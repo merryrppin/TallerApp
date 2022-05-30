@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[tblCotizaciones]
 (
-	[IdCotizacion] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+	[IdCotizacion] INT NOT NULL PRIMARY KEY IDENTITY,
 	[IdCliente] UNIQUEIDENTIFIER NOT NULL,
 	[FechaElaboracion] DATE NOT NULL,
 	[IdContactoCliente] INT NOT NULL,

@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[tblProductosCotizacion]
 (
 	[IdProductoCotizacion] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
-	[IdCotizacion] UNIQUEIDENTIFIER NOT NULL,
+	[IdCotizacion] INT NOT NULL,
 	[IdProducto] UNIQUEIDENTIFIER NOT NULL,
 	[DescripcionProducto] VARCHAR(MAX),
 	[Cantidad] INT NOT NULL,

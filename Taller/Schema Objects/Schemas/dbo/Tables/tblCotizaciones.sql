@@ -1,10 +1,10 @@
 ﻿CREATE TABLE [dbo].[tblCotizaciones]
 (
-	[IdCotizacion] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+	[IdCotizacion] INT NOT NULL PRIMARY KEY,
 	[IdCliente] UNIQUEIDENTIFIER NOT NULL,
 	[FechaElaboracion] DATE NOT NULL,
-	[IdContactoCliente] INT NOT NULL,
-	[NombreContactoCliente] VARCHAR(250) NOT NULL,
+	[IdContactoCliente] INT,
+	[NombreContactoCliente] VARCHAR(250),
 	[IdResponsableCotizacion] INT NOT NULL,
 	[NombreResponsableCotizacion] VARCHAR(200) NOT NULL,
 	[Encabezado] VARCHAR(MAX),

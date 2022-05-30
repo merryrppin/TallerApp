@@ -114,6 +114,10 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductosCotizacionValues.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblAccounting.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetCotizaciones.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblRecepcionProducto.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductosRecepcionProducto.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProductosRecepcionProductoValues.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\SaveRecepcionProducto.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Taller.refactorlog" />

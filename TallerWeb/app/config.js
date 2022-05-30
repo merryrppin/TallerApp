@@ -216,6 +216,36 @@
                 }]
             }
         })
+        .state('recepcionProductos', {
+            url: "/recepcionProductos",
+            templateUrl: "app/modules/general/products/recepcionProductos.html",
+            controller: "recepcionProductoController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: aLanguage.appName,
+                        files: [
+                            'app/modules/general/products/recepcionProductosCtrl.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('listRecepcionProductos', {
+            url: "/listRecepcionProductos",
+            templateUrl: "app/modules/general/products/listRecepcionProductos.html",
+            controller: "listRecepcionProductosController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: aLanguage.appName,
+                        files: [
+                            'app/modules/general/products/listRecepcionProductoCtrl.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('comprobantes', {
             url: "/comprobantes",
             templateUrl: "app/modules/transacciones/comprobantes/comprobantes.html",

@@ -93,6 +93,13 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
     };
 
     $rootScope.saveBtnFunction = function () {
+        if ($("#cliente").val() === '? string: ?') {
+            GeneralService.showToastR({
+                body: "Por favor seleccione un cliente",
+                type: 'error'
+            });
+            return;
+        }
         if ($("#frmRecepcionProductos").valid() && $scope.validateDataGridProduct()) {
             $scope.saveRecepcionProductos();
         }

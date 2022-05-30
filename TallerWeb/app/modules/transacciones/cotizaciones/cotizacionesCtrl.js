@@ -108,6 +108,13 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     };
 
     $rootScope.saveBtnFunction = function () {
+        if ($("#cliente").val() === '? string: ?') {
+            GeneralService.showToastR({
+                body: "Por favor seleccione un cliente",
+                type: 'error'
+            });
+            return;
+        }
         if ($("#frmCotizacion").valid() && $scope.validateDataGridProduct()) {
             $scope.saveCotizacion();
         }

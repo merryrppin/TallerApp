@@ -1,5 +1,6 @@
 ﻿angular.module(aLanguage.appName).controller('addCustomersController', ["$scope", '$rootScope', "$location", "GeneralService", addCustomersController]);
-function addCustomersController($scope, $rootScope, $location,  GeneralService) {
+function addCustomersController($scope, $rootScope, $location, GeneralService) {
+    $rootScope.showSaveButton = true;
     $scope.listTypeIdentification = [];
     $scope.listFiscal = [];
     $scope.listCities = [];
@@ -110,6 +111,18 @@ function addCustomersController($scope, $rootScope, $location,  GeneralService) 
         $scope.Customers.check_digit = (y > 1) ? 11 - y : y;
     }
 
+    $rootScope.saveBtnFunction = function () {
+        if ($scope.address && $scope.selectedCities.originalObject && $scope.Customers.check_digit && $scope.Customers.id_type && $scope.Customers.identification && $scope.contact.first_name && $scope.contact.last_name && $scope.Customers.person_type) {
+            $scope.saveCustomer();
+        }
+        else {
+            GeneralService.showToastR({
+                body: "Por favor diligencie el formulario completo.",
+                type: 'error'
+            });
+        }
+        
+    };
     $scope.saveCustomer = function () {
         $scope.Customers.check_digit = $scope.Customers.check_digit.toString();
         $scope.Customers.name = [$scope.contact.first_name, $scope.contact.last_name];
@@ -118,7 +131,35 @@ function addCustomersController($scope, $rootScope, $location,  GeneralService) 
         $scope.Customers.contacts = [$scope.contact];
         $scope.Customers.address = $scope.address
         $scope.Customers.fiscal_responsibilities = $scope.listFiscal.filter(x => x.Selected == true);
-        $scope.Customers;
+        var Customers = angular.copy(GeneralService.userLogin);
+        Customers.Customers = JSON.stringify($scope.Customers);
+
+        GeneralService.executeAjax({
+            url: 'api/CreateCustomer',
+            data: Customers ,
+            success: function (response) {
+                var result = JSON.parse(response);
+                if (result) {
+                    if (result.Errors) {
+                        GeneralService.showToastR({
+                            body: result.Errors[0].Code,
+                            type: 'error'
+                        });
+                    }
+                    else {
+                        GeneralService.showToastR({
+                            body: "El Cliente se guardo satisfactoriamente en SIIGO",
+                            type: 'error'
+                        });
+                    }
+                } else {
+                    GeneralService.showToastR({
+                        body: result.Errors[0].Code,
+                        type: 'error'
+                    });
+                }
+            }
+        });
     }
     angular.element(document).ready(init);
 

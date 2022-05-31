@@ -1,5 +1,7 @@
 ﻿using Services.General;
+using Services.General.Entities.LoginEntities;
 using Services.General.Entities.StoredEntities;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 
@@ -22,9 +24,19 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("api/GetNumberCC")]
-        public string GetNumberCC(string apiToken)
+        public string GetNumberCC(LoginEntity loginresp)
         {
-            return _administrationService.GetNumberCC(apiToken).Result;
+            return _administrationService.GetNumberCC(loginresp).Result;
+        }
+
+        [HttpPost]
+        [Route("api/CreateCustomer")]
+        public Task<string> CreateCustomer(LoginEntity loginresp)
+        {
+            return _administrationService.CreateCustomer(loginresp);
+            
+
+
         }
     }
 }

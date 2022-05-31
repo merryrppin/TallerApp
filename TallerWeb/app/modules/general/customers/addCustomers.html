@@ -1,129 +1,131 @@
-﻿<div class="row">
-    <input type="button" value="Guardar" ng-click="saveCustomer()" />
-    <div class="col-lg-12 form-group row">
-        <div class="col-lg-6">
-            <h3>Datos Básicos</h3>
-            <div class="col-lg-12 form-group row">
-                <div class="col-md-6" style="border-right:solid 1px black">
-                    <label class="col-form-label text-left col-lg-12 col-sm-12">Tipo *</label>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <select class="form-control" name="option" ng-model="Customers.person_type">
-                                <option value="" disabled selected>Tipo</option>
-                                <option value="Person">Es persona</option>
-                                <option value="Company">Es Empresa</option>
-                            </select>
+﻿<form autocomplete="off">
+    <div class="row">
+        <!--<input type="button" value="Guardar" ng-click="saveCustomer()" />-->
+        <div class="col-lg-12 form-group row">
+            <div class="col-lg-6">
+                <h3>Datos Básicos</h3>
+                <div class="col-lg-12 form-group row">
+                    <div class="col-md-6" style="border-right:solid 1px black">
+                        <label class="col-form-label text-left col-lg-12 col-sm-12">Tipo *</label>
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <select class="form-control" name="option" ng-model="Customers.person_type" >
+                                    <option value="" disabled selected>Tipo</option>
+                                    <option value="Person">Es persona</option>
+                                    <option value="Company">Es Empresa</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <select class="form-control" name="option" ng-model="Customers.id_type" >
+                                    <option value="" disabled selected>Tipo Identificación</option>
+                                    <option ng-repeat="typeIdentification in listTypeIdentification" ng-value="typeIdentification.code">{{typeIdentification.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                <input type="text" class="form-control" name="identification" placeholder="Identificacion" ng-model="Customers.identification" ng-change="checkDigit()" />
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <input type="text" class="form-control" name="dv" placeholder="DV" disabled ng-model="Customers.check_digit"  />
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <select class="form-control" name="option" ng-model="Customers.id_type">
-                                <option value="" disabled selected>Tipo Identificación</option>
-                                <option ng-repeat="typeIdentification in listTypeIdentification" ng-value="typeIdentification.code">{{typeIdentification.name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-lg-9 col-md-9 col-sm-9">
-                            <input type="text" class="form-control" name="identification" placeholder="Identificacion" ng-model="Customers.identification" ng-change="checkDigit()" />
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-3">
-                            <input type="text" class="form-control" name="dv" placeholder="DV" disabled ng-model="Customers.check_digit" />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="col-form-label text-left col-lg-12 col-sm-12" style="color:white;">Tipo</label>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" ng-model="contact.first_name" placeholder="Nombres" />
+                    <div class="col-md-6">
+                        <label class="col-form-label text-left col-lg-12 col-sm-12" style="color:white;">Tipo</label>
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <input type="text" class="form-control" ng-model="contact.first_name" placeholder="Nombres"  />
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" ng-model="contact.last_name" placeholder="Apellidos" />
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <input type="text" class="form-control" ng-model="contact.last_name" placeholder="Apellidos"  />
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <angucomplete id="ex1" placeholder="Ciudad" ng-model="selectedCities" pause="100" selectedobject="selectedCities" localdata="listCities" searchfields="city_name" titlefield="city_name" minlength="1" inputclass="form-control form-control-small" matchclass="highlight" />
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <angucomplete id="ex1" placeholder="Ciudad" ng-model="selectedCities" pause="100" selectedobject="selectedCities" localdata="listCities" searchfields="city_name" titlefield="city_name" minlength="1" inputclass="form-control form-control-small" matchclass="highlight"  />
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" ng-model="address.address" placeholder="Direccion" />
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <input type="text" class="form-control" ng-model="address.address" placeholder="Direccion"  />
 
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6" style="border-left:solid 1px black">
-            <h3>Datos para facuración y envío</h3>
-            <div class="col-lg-12 form-group row">
-                <div class="col-md-6" style="border-right:solid 1px black">
-                    <label class="col-form-label text-left col-lg-12 col-sm-12" style="color:white;">Tipo</label>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" ng-model="contact.first_name" placeholder="Nombre Contacto" />
-
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" ng-model="contact.last_name" placeholder="Apellido Contacto" />
-
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input type="text" class="form-control" ng-model="contact.email" placeholder="Correo Electronico" />
-
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <select class="form-control" name="option">
-                                <option value="" disabled selected>Tipo de régimen IVA</option>
-                                <option>IVA 19</option>
-                                <option>IVA 5</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-lg-5 col-md-5 col-sm-5">
-                            <input type="text" class="form-control" ng-model="phones.indicative" placeholder="Indicativo" />
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-7">
-                            <input type="text" class="form-control" ng-model="phones.number" placeholder="# Telefono" />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="col-form-label text-left col-lg-12 col-sm-12" style="color:white;">Tipo</label>
-                    <span>Responsabilidad fiscal</span>
-                    <br>
-                    <br>
-                    <p>Verifica la responsabilidad en el RUT de tu cliente, minimo asignar R-99-PN</p>
-                    <div ng-repeat="item in listFiscal ">
-                        <input type="checkbox" ng-model="item.Selected"/>
-                        <label> {{item.code+" "+item.name}}</label><br>
-                    </div>
-                    <!--<input type="checkbox">
-                    <label for="vehicle1"> 0-13 Grab Contribuyente</label><br>
-                    <input type="checkbox">
-                    <label for="vehicle2"> 0-15 Autoretenedor</label><br>
-                    <input type="checkbox">
-                    <label for="vehicle3"> 0-23 Régimen simple de tributación</label><br>
-                    <input type="checkbox">
-                    <label for="vehicle3"> R-99-PN No aplica - otros</label><br><br>-->
                 </div>
             </div>
+            <div class="col-lg-6" style="border-left:solid 1px black">
+                <h3>Datos para facuración y envío</h3>
+                <div class="col-lg-12 form-group row">
+                    <div class="col-md-6" style="border-right:solid 1px black">
+                        <label class="col-form-label text-left col-lg-12 col-sm-12" style="color:white;">Tipo</label>
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <input type="text" class="form-control" ng-model="contact.first_name" placeholder="Nombre Contacto" />
+
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <input type="text" class="form-control" ng-model="contact.last_name" placeholder="Apellido Contacto" />
+
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <input type="text" class="form-control" ng-model="contact.email" placeholder="Correo Electronico" />
+
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <select class="form-control" name="option">
+                                    <option value="" disabled selected>Tipo de régimen IVA</option>
+                                    <option>IVA 19</option>
+                                    <option>IVA 5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-5 col-md-5 col-sm-5">
+                                <input type="text" class="form-control" ng-model="phones.indicative" placeholder="Indicativo" />
+                            </div>
+                            <div class="col-lg-7 col-md-7 col-sm-7">
+                                <input type="text" class="form-control" ng-model="phones.number" placeholder="# Telefono" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="col-form-label text-left col-lg-12 col-sm-12" style="color:white;">Tipo</label>
+                        <span>Responsabilidad fiscal</span>
+                        <br>
+                        <br>
+                        <p>Verifica la responsabilidad en el RUT de tu cliente, minimo asignar R-99-PN</p>
+                        <div ng-repeat="item in listFiscal ">
+                            <input type="checkbox" ng-model="item.Selected" />
+                            <label> {{item.code+" "+item.name}}</label><br>
+                        </div>
+                        <!--<input type="checkbox">
+                        <label for="vehicle1"> 0-13 Grab Contribuyente</label><br>
+                        <input type="checkbox">
+                        <label for="vehicle2"> 0-15 Autoretenedor</label><br>
+                        <input type="checkbox">
+                        <label for="vehicle3"> 0-23 Régimen simple de tributación</label><br>
+                        <input type="checkbox">
+                        <label for="vehicle3"> R-99-PN No aplica - otros</label><br><br>-->
+                    </div>
+                </div>
 
 
+            </div>
         </div>
     </div>
-</div>
+</form>

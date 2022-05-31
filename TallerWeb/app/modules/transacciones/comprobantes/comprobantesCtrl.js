@@ -56,7 +56,7 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
     $scope.saveComprobante = function () {
         GeneralService.executeAjax({
             url: 'api/GetNumberCC',
-            params: { apiToken: GeneralService.userLogin.access_token},
+            data: GeneralService.userLogin,
             success: function (response) {
                 if (response.Value) {
                     var totalCredit = 0;
@@ -115,6 +115,8 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
                 }
             }
         });
+
+
     }
 
 

@@ -15,5 +15,10 @@
             GeneralError,
             UserExist
         }
+
+        public enum EnumPDFType
+        {
+            RecepcionProducto = 1
+        }
     }
 }

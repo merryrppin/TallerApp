@@ -166,9 +166,28 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
             $scope.saveRecepcionProductos();
         }
     };
-
+    
     $rootScope.printBtnFunction = function () {
-        //Print PDF
+        var PDFEntity = {
+            PDFType: 1,
+            id: $scope.recepcionProducto.IdRecepcionProducto
+        };
+        GeneralService.executeAjax({
+            url: 'api/PrintPDF',
+            data: PDFEntity,
+            success: function (response) {
+                debuggger;
+                //if (typeof response !== 'undefined' && typeof response.UserId !== 'undefined' && response.UserId !== 0) {
+                //} else {
+                //    GeneralService.showToastR({
+                //        body: 'Usuario o contraseña incorrecta',
+                //        type: 'error'
+                //    });
+                //    $scope.loading = false;
+                //}
+            },
+            funcionIncorrecto: function () { $scope.loading = false; }
+        });
     };
 
     $scope.saveRecepcionProductos = function () {

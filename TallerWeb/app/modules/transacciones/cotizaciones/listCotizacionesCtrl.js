@@ -12,8 +12,20 @@ function listCotizacionesController($scope, $rootScope, $location, GeneralServic
         { headerName: 'Total Bruto', field: "TotalBruto", width: 120 },
         { headerName: 'Descuentos', field: "Descuentos", width: 170 },
         { headerName: 'SubTotal', field: "SubTotal", width: 170 },
-        { headerName: 'Total Neto', field: "TotalNeto", width: 170 }
+        { headerName: 'Total Neto', field: "TotalNeto", width: 170 },
+        {
+            headerName: aLanguage.actions, cellStyle: { "text-align": "Center" }, cellRenderer: function (row) {
+                var sHtml = "<button style='height: 1rem;' data-toggle='tooltip' title='Abrir cotización' class='btn btn-sm btn-icon' ng-click='loadCotizacion(" + row.data.IdCotizacion + ")'><i class='fa fa-percentage'></i></button>";
+                return sHtml;
+            }
+        }
     ];
+
+    $scope.loadCotizacion = function (IdCotizacion) {
+        $('[data-toggle="tooltip"]').tooltip('dispose');
+        GeneralService.IdCotizacion = IdCotizacion;
+        $location.path('/cotizaciones');
+    };
 
     $scope.rowData = [];
 
@@ -27,7 +39,8 @@ function listCotizacionesController($scope, $rootScope, $location, GeneralServic
             sortable: true,
             filter: true,
             resize: true
-        }
+        },
+        angularCompileRows: true
     };
 
     $scope.loadCotizaciones = function () {
@@ -42,13 +55,10 @@ function listCotizacionesController($scope, $rootScope, $location, GeneralServic
                 if (response.Exception === null) {
                     let data = response.Value[0].DataMapped;
                     $scope.listCotizacionesGrid.api.setRowData(data);
-
                 }
             }
         });
     };
-
-
 
     angular.element(document).ready(init);
 

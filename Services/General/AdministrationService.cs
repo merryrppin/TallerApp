@@ -141,6 +141,7 @@ namespace Services.General
                                     {
                                         await LoginSiigoAsync(loginResp);
                                     }
+                                    await GetNumberCC1(loginResp);
                                     await LoadProductsSiigo(loginResp);
                                     await LoadCustomersSiigo(loginResp);
                                 }
@@ -284,38 +285,73 @@ namespace Services.General
             }
         }
 
-        public async Task<string> GetNumberCC(string AccessToken)
+        public async Task<string> GetNumberCC(LoginEntity loginResp)
         {
-            string JsonNumberCC = "";
-            try
+            string JsonProduct = "";
+            string url = string.Format("{0}v1/document-types?type=CC", UrlSiigo);
+            HttpClient client = new HttpClient();
+
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/document-types?type=CC"))
             {
-                
-                string originalUrl = "{0}v1/document-types?type=CC";
-
-                HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Authorization", AccessToken);
-
-                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/document-types?type=CC"))
+                client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
+                using (HttpContent content = request.Content)
                 {
-                    string url = string.Format(originalUrl, UrlSiigo);
-                    using (HttpContent content = request.Content)
+                    HttpResponseMessage response = (await client.GetAsync(url));
+                    string contents = await response.Content.ReadAsStringAsync();
+                    ResultSiigoEntity objProducts = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
+
+                    JsonProduct = JsonConvert.SerializeObject(objProducts.results);
+                }
+            }
+            return JsonProduct;
+
+
+
+        }
+
+        public async Task GetNumberCC1(LoginEntity loginResp)
+        {
+            string JsonProduct = "";
+            string url = string.Format("{0}v1/document-types?type=CC", UrlSiigo);
+            HttpClient client = new HttpClient();
+
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/document-types?type=CC"))
+            {
+                client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
+                using (HttpContent content = request.Content)
+                {
+                    HttpResponseMessage response = (await client.GetAsync(url));
+                    string contents = await response.Content.ReadAsStringAsync();
+                    ResultSiigoEntity objProducts = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
+
+                    JsonProduct = JsonConvert.SerializeObject(objProducts.results);
+                }
+            }
+
+        }
+
+        public async Task<string> CreateCustomer(LoginEntity loginResp)
+        {
+            string url = string.Format("{0}v1/customers", UrlSiigo);
+            string contents = String.Empty;
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "{0}v1/customers"))
+            {
+                request.Content = new StringContent(loginResp.Customers, Encoding.UTF8, "application/json");
+                using (HttpContent content = request.Content)
+                {
+                    HttpResponseMessage response = (await client.PostAsync(url, content));
+                    contents = await response.Content.ReadAsStringAsync();
+                    if(!contents.Contains("error"))
                     {
-                        HttpResponseMessage response = (await client.GetAsync(url));
-                        string contents = await response.Content.ReadAsStringAsync();
-                        ResultSiigoEntity objCustomers = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
-
-                        JsonNumberCC = JsonConvert.SerializeObject(objCustomers.results);
-
+                        SaveOrUpdateCustomers(contents);
                     }
 
                 }
             }
-            catch(Exception ex)
-            {
-               var l = ex;
-            }
-
-            return JsonNumberCC;
+            
+            return contents;
 
         }
         #endregion

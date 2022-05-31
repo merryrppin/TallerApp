@@ -74,6 +74,7 @@
     <Compile Include="General\Constants\Constants.cs" />
     <Compile Include="General\Entities\GeneralResponse.cs" />
     <Compile Include="General\Entities\LoginEntities\LoginEntity.cs" />
+    <Compile Include="General\Entities\PDFEntities\PDFEntity.cs" />
     <Compile Include="General\Entities\SiigoEntities\ResultPaginationSiigoEntity.cs" />
     <Compile Include="General\Entities\SiigoEntities\ResultSiigoEntity.cs" />
     <Compile Include="General\Entities\StoredEntities\StoredObjectParams.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="General\Entities\StoredEntities\StoredTableResponse.cs" />
     <Compile Include="General\Enums\Enums.cs" />
     <Compile Include="General\ManageExceptions.cs" />
+    <Compile Include="General\PDFService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secure\Encode_Decode.cs" />
   </ItemGroup>

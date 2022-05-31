@@ -5,9 +5,14 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
 
     GeneralService.hideGeneralButtons();
     $rootScope.showSaveButton = true;
+    $rootScope.showCancelButton = true;
     $scope.aLanguage = aLanguage;
 
+    var IdRecepcionProducto = 1// GeneralService.IdRecepcionProducto;
+    GeneralService.IdRecepcionProducto = null;
+
     $scope.recepcionProducto = {
+        IdRecepcionProducto: typeof IdRecepcionProducto === 'undefined' ? null : IdRecepcionProducto,
         tipoN: 'R-1-Recepción',
         numero: '',
         cliente: '',
@@ -19,7 +24,6 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
 
     $scope.newProduct = {
         descripcion: '',
-        productId: null,
         productoId: null,
         cantidad: 1,
     };
@@ -28,6 +32,54 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
     $scope.dataGridProduct = [];
     $scope.customerList = [];
     $scope.contactos = [];
+
+    $scope.loadRecepcionProducto = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetRecepcionProducto",
+            "StoredParams": [{
+                Name: "IdRecepcionProducto",
+                Value: $scope.recepcionProducto.IdRecepcionProducto
+            }]
+        };
+
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    var recepcionProducto = angular.copy(response.Value[0].DataMapped[0]);
+                    $scope.recepcionProducto.fechaElaboracion = moment(recepcionProducto.FechaElaboracion).format('YYYY/MM/DD');
+                    $scope.recepcionProducto.responsableRecepcionProductoId = recepcionProducto.IdResponsableRecepcionProducto;
+                    $scope.recepcionProducto.responsableRecepcionProducto = recepcionProducto.NombreResponsableRecepcionProducto;
+                    $scope.recepcionProducto.cliente = recepcionProducto.IdCliente;
+                    $scope.recepcionProducto.notas = recepcionProducto.Notas;
+
+                    var aProducts = angular.copy(response.Value[1].DataMapped);
+                    var aProductsPropValues = angular.copy(response.Value[2].DataMapped);
+                    $.each(aProducts, function (i, objProduct) {
+                        var newProductTemp = angular.copy($scope.newProduct);
+                        newProductTemp.rowPosition = $scope.rowPosition;
+                        $scope.rowPosition++;
+
+                        newProductTemp.cantidad = parseInt(objProduct.Cantidad);
+                        newProductTemp.descripcion = objProduct.DescripcionProducto;
+                        newProductTemp.productoId = objProduct.IdProducto;
+
+                        $scope.dataGridProduct.push(newProductTemp);
+                        $scope.fillProduct(newProductTemp.rowPosition, false);
+
+                        $.each($scope.dataGridProduct[i].productPropertiesSelected, function (j, propertyProd) {
+                            var aProperties = aProductsPropValues.filter(p => p.IdProductoRecepcionProducto === objProduct.IdProductoRecepcionProducto && p.IdProductProperty === propertyProd.IdProductProperty);
+                            if (aProperties.length > 0) {
+                                propertyProd.Value = aProperties[0].ValueOption;
+                            }
+                        });
+
+                    });
+                }
+            }
+        });
+    };
 
     $scope.loadCustomers = function () {
         var dataSP = {
@@ -70,6 +122,12 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
                 if (response.Exception === null) {
                     $scope.productProperties = angular.copy(response.Value[0].DataMapped);
                     $scope.productPropertyOptions = angular.copy(response.Value[1].DataMapped);
+
+                    if ($scope.recepcionProducto.IdRecepcionProducto !== null) {
+                        $rootScope.showSaveButton = false;
+                        $rootScope.showPrintButton = true;
+                        $scope.loadRecepcionProducto();
+                    }
                 }
             }
         });
@@ -92,6 +150,10 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
         });
     };
 
+    $rootScope.cancelBtnFunction = function () {
+        $location.path('/listRecepcionProductos');
+    };
+
     $rootScope.saveBtnFunction = function () {
         if ($("#cliente").val() === '? string: ?') {
             GeneralService.showToastR({
@@ -104,9 +166,28 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
             $scope.saveRecepcionProductos();
         }
     };
-
+    
     $rootScope.printBtnFunction = function () {
-        //Print PDF
+        var PDFEntity = {
+            PDFType: 1,
+            id: $scope.recepcionProducto.IdRecepcionProducto
+        };
+        GeneralService.executeAjax({
+            url: 'api/PrintPDF',
+            data: PDFEntity,
+            success: function (response) {
+                debuggger;
+                //if (typeof response !== 'undefined' && typeof response.UserId !== 'undefined' && response.UserId !== 0) {
+                //} else {
+                //    GeneralService.showToastR({
+                //        body: 'Usuario o contraseña incorrecta',
+                //        type: 'error'
+                //    });
+                //    $scope.loading = false;
+                //}
+            },
+            funcionIncorrecto: function () { $scope.loading = false; }
+        });
     };
 
     $scope.saveRecepcionProductos = function () {
@@ -157,11 +238,12 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
             url: 'api/executeStoredProcedure',
             data: dataSP,
             success: function (response) {
-                if (response.Value.length === 0) {
+                if (response.Value.length === 1) {
                     GeneralService.showToastR({
                         body: aLanguage.saveSuccessful,
                         type: 'success'
                     });
+                    response.Value[0].DataMapped[0].IdRecepcionProducto;
                     $rootScope.showPrintButton = true;
                 } else {
                     GeneralService.showToastR({
@@ -226,7 +308,7 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
         $('#modalFillDataProduct').modal('show');
     };
 
-    $scope.fillProduct = function (rowIndex) {
+    $scope.fillProduct = function (rowIndex, openModal = true) {
         $scope.selectedProduct = rowIndex;
         var productPropertiesSelected = angular.copy($scope.productProperties.filter(p => p.IdProduct === $scope.dataGridProduct[rowIndex].productoId));
         if (productPropertiesSelected.length === 0)
@@ -237,7 +319,8 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
         });
 
         $scope.dataGridProduct[rowIndex].productPropertiesSelected = angular.copy(productPropertiesSelected);
-        $('#modalFillDataProduct').modal('show');
+        if (openModal)
+            $('#modalFillDataProduct').modal('show');
     };
 
     $scope.selectCliente = function () {

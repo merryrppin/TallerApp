@@ -240,7 +240,7 @@
                     return $ocLazyLoad.load({
                         name: aLanguage.appName,
                         files: [
-                            'app/modules/general/products/listRecepcionProductoCtrl.js'
+                            'app/modules/general/products/listRecepcionProductosCtrl.js'
                         ]
                     });
                 }]

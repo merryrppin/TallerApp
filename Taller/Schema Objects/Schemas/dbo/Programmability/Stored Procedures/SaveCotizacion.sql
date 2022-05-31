@@ -72,6 +72,8 @@ BEGIN
 				SELECT  prodCot.[IdProductoCotizacion], IdProductProperty, [Value]
 			FROM #tmpValoresProductosCotizacion AS valProdCot
 			INNER JOIN #tmpProductosCotizacion AS prodCot ON valProdCot.[IdProductoTempId] = prodCot.[IdProductoTempId];
+
+			SELECT @IdCotizacion AS IdCotizacion
 		COMMIT TRANSACTION
 	END TRY
 	BEGIN CATCH

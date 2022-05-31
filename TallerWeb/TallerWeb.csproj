@@ -157,6 +157,8 @@
     <Content Include="app\modules\general\login\loginCtrl.js" />
     <Content Include="app\modules\general\products\listProducts.html" />
     <Content Include="app\modules\general\products\listProductsCtrl.js" />
+    <Content Include="app\modules\general\products\listRecepcionProductos.html" />
+    <Content Include="app\modules\general\products\listRecepcionProductosCtrl.js" />
     <Content Include="app\modules\general\products\recepcionProductos.html" />
     <Content Include="app\modules\general\products\recepcionProductosCtrl.js" />
     <Content Include="app\modules\general\sessionSvc.js" />

@@ -32,7 +32,6 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
 
     $scope.newProduct = {
         descripcion: '',
-        productId: null,
         productoId: null,
         cantidad: 1,
         available_quantity: 0,
@@ -84,7 +83,6 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                         newProductTemp.cantidad = parseInt(objProduct.Cantidad);
                         newProductTemp.descripcion = objProduct.DescripcionProducto;
                         newProductTemp.descuento = parseFloat(objProduct.Descuento);
-                        newProductTemp.productId = objProduct.IdProducto;
                         newProductTemp.productoId = objProduct.IdProducto;
                         newProductTemp.taxId = objProduct.TaxId;
                         newProductTemp.totalProducto = parseFloat(objProduct.TotalProducto);
@@ -238,12 +236,13 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
             url: 'api/executeStoredProcedure',
             data: dataSP,
             success: function (response) {
-                if (response.Value.length === 0) {
+                if (response.Value.length === 1) {
                     GeneralService.showToastR({
                         body: aLanguage.saveSuccessful,
                         type: 'success'
                     });
-                    $location.path('/listCotizaciones');
+                    $rootScope.showSaveButton = false;
+                    $scope.cotizacion.idCotizacion = parseInt(response.Value[0].DataMapped[0].IdCotizacion);
                 } else {
                     GeneralService.showToastR({
                         body: aLanguage[response.GeneralError],

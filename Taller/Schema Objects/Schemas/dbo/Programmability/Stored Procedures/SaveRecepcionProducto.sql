@@ -50,10 +50,9 @@ BEGIN
 			INSERT INTO [tblProductosRecepcionProducto]([IdProductoRecepcionProducto], [IdRecepcionProducto], [IdProducto], [DescripcionProducto], [Cantidad])
 			SELECT [IdProductoRecepcionProducto], @IdRecepcionProducto, [ProductoId], [DescripcionProducto], [Cantidad]
 			FROM #tmpProductosRecepcionProducto;
-
 			
-			INSERT INTO [dbo].[tblProductosRecepcionProductoValues] ([IdProductoRecepcionProducto], [IdProduct], [IdProductProperty], [ValueOption])
-				SELECT  prodCot.[IdProductoRecepcionProducto], IdProduct, IdProductProperty, [Value]
+			INSERT INTO [dbo].[tblProductosRecepcionProductoValues] ([IdProductoRecepcionProducto], [IdProductProperty], [ValueOption])
+				SELECT  prodCot.[IdProductoRecepcionProducto], IdProductProperty, [Value]
 			FROM #tmpValoresProductosRecepcionProducto AS valProdCot
 			INNER JOIN #tmpProductosRecepcionProducto AS prodCot ON valProdCot.[IdProductoTempId] = prodCot.[IdProductoTempId];
 		COMMIT TRANSACTION

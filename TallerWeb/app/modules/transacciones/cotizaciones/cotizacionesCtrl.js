@@ -5,9 +5,15 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
 
     GeneralService.hideGeneralButtons();
     $rootScope.showSaveButton = true;
+    $rootScope.showCancelButton = true;
     $scope.aLanguage = aLanguage;
 
+    $scope.rowPosition = 0;
+    var IdCotizacion = GeneralService.IdCotizacion;
+    GeneralService.IdCotizacion = null;
+
     $scope.cotizacion = {
+        idCotizacion: typeof IdCotizacion === 'undefined' ? null : IdCotizacion,
         tipoN: 'C-1-Cotización',
         numero: '',
         cliente: '',
@@ -43,6 +49,62 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
     $scope.dataGridProduct = [];
     $scope.customerList = [];
     $scope.contactos = [];
+
+    $scope.loadCotizacion = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetCotizacion",
+            "StoredParams": [{
+                Name: "IdCotizacion",
+                Value: $scope.cotizacion.idCotizacion
+            }]
+        };
+
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    var cotizacion = angular.copy(response.Value[0].DataMapped[0]);
+                    $scope.cotizacion.fechaElaboracion = moment(cotizacion.FechaElaboracion).format('YYYY/MM/DD');
+                    $scope.cotizacion.responsableCotizacionId = cotizacion.IdResponsableCotizacion;
+                    $scope.cotizacion.responsableCotizacion = cotizacion.NombreResponsableCotizacion;
+                    $scope.cotizacion.descuentos = cotizacion.Descuentos;
+                    $scope.cotizacion.subTotal = cotizacion.SubTotal;
+                    $scope.cotizacion.totalBruto = cotizacion.TotalBruto;
+                    $scope.cotizacion.totalNeto = cotizacion.TotalNeto;
+                    $scope.cotizacion.cliente = cotizacion.IdCliente;
+
+                    var aProducts = angular.copy(response.Value[1].DataMapped);
+                    var aProductsPropValues = angular.copy(response.Value[2].DataMapped);
+                    $.each(aProducts, function (i, objProduct) {
+                        var newProductTemp = angular.copy($scope.newProduct);
+                        newProductTemp.rowPosition = $scope.rowPosition;
+                        $scope.rowPosition++;
+
+                        newProductTemp.cantidad = parseInt(objProduct.Cantidad);
+                        newProductTemp.descripcion = objProduct.DescripcionProducto;
+                        newProductTemp.descuento = parseFloat(objProduct.Descuento);
+                        newProductTemp.productId = objProduct.IdProducto;
+                        newProductTemp.productoId = objProduct.IdProducto;
+                        newProductTemp.taxId = objProduct.TaxId;
+                        newProductTemp.totalProducto = parseFloat(objProduct.TotalProducto);
+                        newProductTemp.valorunitario = parseFloat(objProduct.ValorUnitario);
+
+                        $scope.dataGridProduct.push(newProductTemp);
+                        $scope.fillProduct(newProductTemp.rowPosition, false);
+
+                        $.each($scope.dataGridProduct[i].productPropertiesSelected, function (j, propertyProd) {
+                            var aProperties = aProductsPropValues.filter(p => p.IdProductoCotizacion === objProduct.IdProductoCotizacion && p.IdProductProperty === propertyProd.IdProductProperty);
+                            if (aProperties.length > 0) {
+                                propertyProd.Value = aProperties[0].ValueOption;
+                            }
+                        });
+
+                    });
+                }
+            }
+        });
+    };
 
     $scope.loadCustomers = function () {
         var dataSP = {
@@ -85,6 +147,10 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                 if (response.Exception === null) {
                     $scope.productProperties = angular.copy(response.Value[0].DataMapped);
                     $scope.productPropertyOptions = angular.copy(response.Value[1].DataMapped);
+                    if ($scope.cotizacion.idCotizacion !== null) {
+                        $rootScope.showSaveButton = false;
+                        $scope.loadCotizacion();
+                    }
                 }
             }
         });
@@ -105,6 +171,10 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
                 }
             }
         });
+    };
+
+    $rootScope.cancelBtnFunction = function () {
+        $location.path('/listCotizaciones');
     };
 
     $rootScope.saveBtnFunction = function () {
@@ -208,7 +278,6 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         return returnValue;
     };
 
-    $scope.rowPosition = 0;
     $scope.addProduct = function () {
         rowPosition = $scope.dataGridProduct.length;
         var newProductTemp = angular.copy($scope.newProduct);
@@ -238,7 +307,7 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         $('#modalFillDataProduct').modal('show');
     };
 
-    $scope.fillProduct = function (rowIndex) {
+    $scope.fillProduct = function (rowIndex, openModal = true) {
         $scope.selectedProduct = rowIndex;
         var productPropertiesSelected = angular.copy($scope.productProperties.filter(p => p.IdProduct === $scope.dataGridProduct[rowIndex].productoId));
         if (productPropertiesSelected.length === 0)
@@ -249,7 +318,8 @@ function cotizacionesController($scope, $rootScope, $location, GeneralService) {
         });
 
         $scope.dataGridProduct[rowIndex].productPropertiesSelected = angular.copy(productPropertiesSelected);
-        $('#modalFillDataProduct').modal('show');
+        if (openModal)
+            $('#modalFillDataProduct').modal('show');
     };
 
     $scope.selectCliente = function () {

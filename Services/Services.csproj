@@ -84,6 +84,7 @@
     <Compile Include="General\Enums\Enums.cs" />
     <Compile Include="General\ManageExceptions.cs" />
     <Compile Include="General\PDFService.cs" />
+    <Compile Include="General\PDF\RecepcionProductoPDF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secure\Encode_Decode.cs" />
   </ItemGroup>

@@ -8,7 +8,7 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
     $rootScope.showCancelButton = true;
     $scope.aLanguage = aLanguage;
 
-    var IdRecepcionProducto = 1// GeneralService.IdRecepcionProducto;
+    var IdRecepcionProducto = GeneralService.IdRecepcionProducto;
     GeneralService.IdRecepcionProducto = null;
 
     $scope.recepcionProducto = {
@@ -176,7 +176,9 @@ function recepcionProductoController($scope, $rootScope, $location, GeneralServi
             url: 'api/PrintPDF',
             data: PDFEntity,
             success: function (response) {
-                debuggger;
+                var commonF = new CommonFiles();
+                var byteArr = commonF.base64ToArrayBuffer(response);
+                commonF.saveByteArray("PDF Prueba", byteArr, "application/pdf", ".pdf");
                 //if (typeof response !== 'undefined' && typeof response.UserId !== 'undefined' && response.UserId !== 0) {
                 //} else {
                 //    GeneralService.showToastR({

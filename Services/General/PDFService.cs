@@ -1,6 +1,9 @@
 ﻿using Services.General.Entities.PDFEntities;
 using Services.General.Entities.StoredEntities;
+using Services.General.PDF;
+using System;
 using System.Collections.Generic;
+using System.Text;
 using static Services.General.Enums.Enums;
 
 namespace Services.General
@@ -14,25 +17,22 @@ namespace Services.General
             administrationService = new AdministrationService();
         }
 
-        public void PrintPDF(PDFEntity PDFEntityInput)
+        public string PrintPDF(PDFEntity PDFEntityInput)
         {
-            string json = "";
             switch (PDFEntityInput.PDFType)
             {
                 case (int)EnumPDFType.RecepcionProducto:
-                    GetDataRecepcionProducto(PDFEntityInput);
-                    return;
+                    return GetDataRecepcionProducto(PDFEntityInput);
                 default:
-                    json = "";
-                    return;
+                    return null;
             }
         }
 
-        private void GetDataRecepcionProducto(PDFEntity PDFEntityInput)
+        private string GetDataRecepcionProducto(PDFEntity PDFEntityInput)
         {
             StoredObjectParams StoredObjectParams = new StoredObjectParams
             {
-                StoredProcedureName = "GetRecepcionProducto",
+                StoredProcedureName = "GetRecepcionProductoPDF",
                 StoredParams = new List<StoredParams> {
                     new StoredParams {Name = "IdRecepcionProducto", Value = PDFEntityInput.Id.ToString(), TypeOfParameter = (int)EnumTypeOfParameter.IntType }
                 }
@@ -42,6 +42,9 @@ namespace Services.General
             {
                 throw StoredObjectResponse.Exception;
             }
+            RecepcionProductoPDF recepcionProductoPDF = new RecepcionProductoPDF(StoredObjectResponse);
+            byte[] bytes = recepcionProductoPDF.GeneratePDF();
+            return Convert.ToBase64String(bytes, 0, bytes.Length);
         }
     }
 }

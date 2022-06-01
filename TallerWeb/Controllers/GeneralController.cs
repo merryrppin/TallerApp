@@ -37,17 +37,13 @@ namespace Web.Controllers
         public Task<string> CreateCustomer(LoginEntity loginresp)
         {
             return _administrationService.CreateCustomer(loginresp);
-
-
-
         }
 
         [HttpPost]
         [Route("api/PrintPDF")]
         public string PrintPDF(PDFEntity PDFEntityInput)
         {
-            _PDFService.PrintPDF(PDFEntityInput);
-            return null;
+            return _PDFService.PrintPDF(PDFEntityInput);
         }
     }
 }

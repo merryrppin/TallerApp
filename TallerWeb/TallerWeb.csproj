@@ -225,6 +225,7 @@
     <Content Include="Libs\AngularJS\Angular-sanitize.1.7.8\index.js" />
     <Content Include="Libs\AngularJS\angular-ui-router.1.0.22.min.js" />
     <Content Include="Libs\AngularJS\angular.1.7.8.min.js" />
+    <Content Include="Libs\General\CommonFiles.js" />
     <Content Include="Libs\General\fonts.googleapis.css" />
     <Content Include="Libs\General\General.css" />
     <Content Include="Libs\General\GeneralScripts.js" />

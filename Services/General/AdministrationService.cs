@@ -141,7 +141,7 @@ namespace Services.General
                                     {
                                         await LoginSiigoAsync(loginResp);
                                     }
-                                    await GetNumberCC1(loginResp);
+                                    //await GetNumberCC1(loginResp);
                                     await LoadProductsSiigo(loginResp);
                                     await LoadCustomersSiigo(loginResp);
                                 }

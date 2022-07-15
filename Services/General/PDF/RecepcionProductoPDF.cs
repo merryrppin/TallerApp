@@ -27,7 +27,7 @@ namespace Services.General.PDF
         {
             RecepcionProductoInfo = StoredObjectResponse.Value[0];
             RecepcionProductoProductsInfo = StoredObjectResponse.Value[1];
-            RecepcionProductoProductsValuesInfo = StoredObjectResponse.Value[2;
+            RecepcionProductoProductsValuesInfo = StoredObjectResponse.Value[2];
         }
 
         public byte[] GeneratePDF()

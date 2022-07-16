@@ -1582,6 +1582,7 @@
     <Content Include="Libs\metronic_v6.0.9\assets\media\illustrations\contact.svg" />
     <Content Include="Libs\metronic_v6.0.9\assets\media\illustrations\data-points.svg" />
     <Content Include="Libs\metronic_v6.0.9\assets\media\illustrations\working.svg" />
+    <Content Include="Libs\metronic_v6.0.9\assets\media\logos\AgroequiposLogo.png" />
     <Content Include="Libs\metronic_v6.0.9\assets\media\logos\favicon.ico" />
     <Content Include="Libs\metronic_v6.0.9\assets\media\logos\logo-10-sm.png" />
     <Content Include="Libs\metronic_v6.0.9\assets\media\logos\logo-10.png" />

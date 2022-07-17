@@ -172,6 +172,8 @@
     <Content Include="app\modules\transacciones\cotizaciones\cotizacionesCtrl.js" />
     <Content Include="app\modules\transacciones\cotizaciones\listCotizaciones.html" />
     <Content Include="app\modules\transacciones\cotizaciones\listCotizacionesCtrl.js" />
+    <Content Include="app\modules\transacciones\facturacion\facturacion.html" />
+    <Content Include="app\modules\transacciones\facturacion\facturacionCtrl.js" />
     <Content Include="default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="General.html" />

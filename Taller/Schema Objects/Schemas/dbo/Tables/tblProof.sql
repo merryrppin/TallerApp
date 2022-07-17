@@ -1,0 +1,6 @@
+﻿CREATE TABLE tblProof
+(
+ProofId INT PRIMARY KEY,
+CreationDate DATETIME DEFAULT GETDATE(),
+CreatedBy VARCHAR(100)
+)

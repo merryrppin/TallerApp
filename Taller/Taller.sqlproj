@@ -122,6 +122,11 @@
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetRecepcionesProducto.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetRecepcionProducto.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetRecepcionProductoPDF.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetQuotationForProof.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblLog.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\UpdateQuotation.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProof.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\tblProofDetail.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Taller.refactorlog" />

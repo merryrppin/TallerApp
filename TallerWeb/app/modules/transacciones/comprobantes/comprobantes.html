@@ -1,21 +1,9 @@
-﻿<div class="kt-portlet__head">
-    <div class="kt-portlet__head-label">
-        <h3 class="kt-portlet__head-title">Nuevo Comprobante Contable</h3>
-    </div>
-</div>
-
-<form class="kt-form kt-form--label-right" autocomplete="off" ng-submit="saveComprobante()" id="frmComprobante">
+﻿<form class="kt-form kt-form--label-right" autocomplete="off" ng-submit="saveComprobante()" id="frmComprobante">
     <div class="kt-portlet__body">
-        <div class="form-group row">
-            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
-                <label>Documento</label><br />
-                {{document.id}}
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
-                <label>Número:</label>
-                <br />Numeración Automática
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
+
+        <div class="form-group row filters">
+
+            <div class="col-lg-3 col-md-6 col-sm-6  form-group ">
                 <label>Fecha de elaboración</label>
                 <div class="input-group date">
                     <input type="text" class="form-control datepicker" readonly="" data-ng-model="document.fecha" id="fechaElaboracion" name="fechaElaboracion">
@@ -24,49 +12,65 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 form-group validated">
-                <label>Responsable de la cotización</label><br />
-                {{document.usuario}}
+
+            <div class="col-lg-3 col-md-6 col-sm-6  form-group ">
+                <label>Clientes:</label>
+                <div class="input-group" style="height:30px">
+                    <select data-ng-disabled="cotizacion.idCotizacion != null"
+                            data-ng-model="CustomerId"
+                            id="cliente"
+                            name="cliente"
+                            class="form-control select2cls"
+                            data-ng-change="selectQuotes()">
+                        <option data-ng-repeat="customer in customerList" value="{{customer.id}}" data-select2-id="{{customer.id}}">
+                            {{customer.name}}
+                        </option>
+                    </select>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="la la-search"></i></span>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: right;">
-                <button type="button" class="btn btn-primary" data-ng-click="addProduct()">Añadir producto</button>
+
+            <div class="col-lg-3 col-md-6 col-sm-6 form-group ">
+                <label>N Cotización:</label>
+                <div data-toggle="tooltip"
+                     data-placement="bottom"
+                     title="Para cargar las cotizaciones debe seleccionar un cliente" class="input-group" style="height:30px">
+                    <select data-ng-disabled="cotizacion.idCotizacion != null"
+                            data-ng-model="IdCotizacion" id="cliente" name="cliente"
+                            class="form-control select2cls">
+                        <option data-ng-repeat="quote in quoteSelected" value="{{quote.IdCotizacion}}" data-select2-id="{{quote.IdCotizacion}}">
+                            {{quote.IdCotizacion}}
+                        </option>
+                    </select>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="la la-search"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-6  form-group">
+                <button type="button"
+                        class="btn btn-primary"
+                        style="margin-top: 26px;"
+                        data-ng-click="SearchQuotation()"
+                        data-toggle="tooltip" data-placement="bottom"
+                        title="Buscar cotización">
+                    Buscar
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: left; float: left; margin-left: 1px">
+                <button type="button" 
+                        class="btn btn-primary" 
+                        data-ng-click="generateProof()">
+                Generar comprobante</button>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th style="min-width:300px">Producto</th>
-                            <th>Cuenta Contable</th>
-                            <th>Movimiento</th>
-                            <th>Cant</th>
-                            <th>Descripción</th>
-                            <th>Valor</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="product in dataGridProduct">
-                            <td>{{$index + 1}}</td>
-                            <td>
-                                <div class="form-group" style="height:30px">
-                                    <select id="slProducto{{product.rowPosition}}" data-ng-model="product.productoId" data-ng-change="setProduct(product, $index)" class="form-control" style="width:100%">
-                                        <option data-ng-repeat="itemProducto in productList" value="{{itemProducto.id}}" data-select2-id="{{itemProducto.id}}">{{itemProducto.name}}</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td>{{product.codeaccount}}</td>
-                            <td>{{product.movement}}</td>
-                            <td><input type="number" data-ng-disabled="product.productoId == null"  min="1" step="1" data-ng-model="product.quantity" class="form-control" ></td>
-                            <td><textarea type="text" data-ng-model="product.descripcion" class="form-control" rows="1"></textarea></td>
-                            <td><input type="number" data-ng-disabled="product.productoId == null" min="1" step="1" data-ng-model="product.value" class="form-control"></td>
-                            <td>
-                                <button type="button" data-ng-disabled="product.productoId == null" style='height: 1rem;' data-toggle='tooltip' title='Actualizar producto' class='btn btn-sm btn-icon' ng-click='openModal($index)'><i class='fa fa-edit'></i></button>
-                                <button type="button" style='height: 1rem;' data-toggle='tooltip' title='Eliminar producto' class='btn btn-sm btn-icon' ng-click='removeProducto($index)'><i class='fa fa-trash'></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div data-ag-grid="listQuotationGrid" style="height: 60vh !important; width: 85% !important;" class="ag-theme-fresh"></div>
             </div>
         </div>
     </div>

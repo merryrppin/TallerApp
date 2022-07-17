@@ -261,6 +261,21 @@
                 }]
             }
         })
+        .state('facturacion', {
+            url: "/facturacion",
+            templateUrl: "app/modules/transacciones/facturacion/facturacion.html",
+            controller: "facturacionController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: aLanguage.appName,
+                        files: [
+                            'app/modules/transacciones/facturacion/facturacionCtrl.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('Customers', {
             url: "/comprobantes",
             templateUrl: "app/modules/general/customers/addCustomers.html",

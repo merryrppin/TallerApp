@@ -13,6 +13,7 @@
 	[DescuentoTotal] DECIMAL(20,4) NOT NULL, 
 	[ImpuestoRetencion] DECIMAL(20,4) NOT NULL, 
 	[ImpuestoCargo] DECIMAL(20,4) NOT NULL, 
+	[CantidadPendiente] INT NULL,
     CONSTRAINT [FK_tblProductosCotizacion_tblCotizaciones] FOREIGN KEY ([IdCotizacion]) REFERENCES [tblCotizaciones]([IdCotizacion]), 
     CONSTRAINT [FK_tblProductosCotizacion_tblProducts] FOREIGN KEY ([IdProducto]) REFERENCES [tblProducts]([id])
 )

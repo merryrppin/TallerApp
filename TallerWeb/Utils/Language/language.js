@@ -45,6 +45,11 @@
     'fatalError': 'Ha ocurrido un error',
     'generalError': 'Ha ocurrido un error',
     'hi': 'Hola',
+    'NotQuotationFoundByClient': 'No se encontró una cotitización para el cliente seleccionado',
+    'NotFound': 'No se encontró información para los filtros seleccionados',
+    'OnlyNumbers': 'El valor debe ser numérico',
+    'WantSaveChanges': 'Está seguro de guardar los cambios?',
+    'RecordsLoaded': 'Registros cargados correctamente',
 
     //Warehouse
     'warehouseCode': 'Código Bodega',

@@ -7,7 +7,8 @@ BEGIN
     SET NOCOUNT ON
 
     -- Insert statements for procedure here
-    SELECT cotizaciones.IdCotizacion,cotizaciones.FechaElaboracion,customers.name,cotizaciones.TotalBruto,cotizaciones.Descuentos,cotizaciones.SubTotal,cotizaciones.TotalNeto 
+    SELECT cotizaciones.IdCotizacion,cotizaciones.FechaElaboracion,customers.name,customers.id AS CustomerId, cotizaciones.TotalBruto,
+    cotizaciones.Descuentos,cotizaciones.SubTotal,cotizaciones.TotalNeto 
 	FROM [dbo].[tblCotizaciones] AS cotizaciones
 	JOIN tblCustomers AS customers
 	ON customers.id = cotizaciones.IdCliente

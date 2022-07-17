@@ -144,6 +144,7 @@ namespace Services.General
                                     //await GetNumberCC1(loginResp);
                                     await LoadProductsSiigo(loginResp);
                                     await LoadCustomersSiigo(loginResp);
+                                    // await GetWarehouses(loginResp);
                                 }
                             }
                         }
@@ -266,8 +267,6 @@ namespace Services.General
             }
         }
 
-
-
         private void SaveOrUpdateCustomers(string JsonCustomers)
         {
             StoredObjectParams StoredObjectParams = new StoredObjectParams
@@ -343,16 +342,37 @@ namespace Services.General
                 {
                     HttpResponseMessage response = (await client.PostAsync(url, content));
                     contents = await response.Content.ReadAsStringAsync();
-                    if(!contents.Contains("error"))
+                    if (!contents.Contains("error"))
                     {
                         SaveOrUpdateCustomers(contents);
                     }
 
                 }
             }
-            
+
             return contents;
 
+        }
+
+        public async Task<string> GetWarehouses(LoginEntity loginResp)
+        {
+            string jsonWarehouses = "";
+            string url = string.Format("{0}v1/warehouses", UrlSiigo);
+            HttpClient client = new HttpClient();
+
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/warehouses"))
+            {
+                client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
+                using (HttpContent content = request.Content)
+                {
+                    HttpResponseMessage response = (await client.GetAsync(url));
+                    string contents = await response.Content.ReadAsStringAsync();
+                    ResultSiigoEntity objWarehouses = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
+
+                    jsonWarehouses = JsonConvert.SerializeObject(objWarehouses.results);
+                }
+            }
+            return jsonWarehouses;
         }
         #endregion
     }

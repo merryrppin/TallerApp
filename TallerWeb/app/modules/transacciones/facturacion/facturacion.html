@@ -21,7 +21,7 @@
                             id="cliente"
                             name="cliente"
                             class="form-control select2cls"
-                            data-ng-change="selectQuotes()">
+                            data-ng-change="selectReceipt()">
                         <option data-ng-repeat="customer in customerList" value="{{customer.id}}" data-select2-id="{{customer.id}}">
                             {{customer.name}}
                         </option>
@@ -38,10 +38,10 @@
                      data-placement="bottom"
                      title="Para cargar las cotizaciones debe seleccionar un cliente" class="input-group" style="height:30px">
                     <select data-ng-disabled="cotizacion.idCotizacion != null"
-                            data-ng-model="IdCotizacion" id="cliente" name="cliente"
+                            data-ng-model="receiptName" id="cliente" name="cliente"
                             class="form-control select2cls">
-                        <option data-ng-repeat="quote in quoteSelected" value="{{quote.IdCotizacion}}" data-select2-id="{{quote.IdCotizacion}}">
-                            {{quote.IdCotizacion}}
+                        <option data-ng-repeat="receipt in receiptSelected" value="{{receipt.Name}}" data-select2-id="{{receipt.Name}}">
+                            {{receipt.Name}}
                         </option>
                     </select>
                     <div class="input-group-append">
@@ -63,8 +63,15 @@
         </div>
 
         <div class="form-group row">
+            <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: left; float: left; margin-left: 1px">
+                <button type="button"
+                        class="btn btn-primary"
+                        data-ng-click="generateInvoice()">
+                    Generar factura
+                </button>
+            </div>
             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                <div data-ag-grid="listQuotationGrid" style="height: 60vh !important;" class="ag-theme-fresh"></div>
+                <div data-ag-grid="listRecepitGrid" style="height: 60vh !important;" class="ag-theme-fresh"></div>
             </div>
         </div>
 
@@ -76,80 +83,88 @@
                     <div class="modal-header">
                         <h4 class="modal-title">Editar factura</h4>
                         <div>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <button type="button" class="close" data-dismiss="modal"></button>
                         </div>
                     </div>
 
                     <div class="modal-body">
-                        <div class="form-group row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                <input type="text" class="form-control" ng-model="invoice.quantity" placeholder="Cantidad" />
+
+                        <div class="row">
+                            <div class="col-lg-3" >
+                                <div class="form-group row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <input type="text" class="form-control" ng-model="invoice.quantity" placeholder="Cantidad" />
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <input type="text" class="form-control" ng-model="invoice.UnitValue" placeholder="Valor" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9" style="border-left:solid 1px black">
+
+                                <button data-ng-if="cotizacion.idCotizacion == null" type="button" class="btn btn-primary" data-ng-click="addProduct()">Añadir producto</button>
+
+                                <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th style="min-width:300px">Producto</th>
+                                                <th>Descripción</th>
+                                                <th data-ng-if="cotizacion.idCotizacion == null">Disponible</th>
+                                                <th>Cant</th>
+                                                <th>Valor Unitario</th>
+                                                <th>% Desc.</th>
+                                                <th data-ng-if="cotizacion.idCotizacion == null">Impuesto Cargo</th>
+                                                <th>Valor Total</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="product in dataGridProduct">
+                                                <td>{{$index + 1}}</td>
+                                                <td>
+                                                    <div class="form-group" style="height:30px">
+                                                        <select data-ng-disabled="cotizacion.idCotizacion != null" id="TslProducto{{product.rowPosition}}" data-ng-model="product.productoId" data-ng-change="setProduct(product)" class="form-control" style="width:100%">
+                                                            <option data-ng-repeat="itemProducto in productList" value="{{itemProducto.id}}" data-select2-id="{{itemProducto.id}}">{{itemProducto.name}}</option>
+                                                        </select>
+
+                                                    </div>
+                                                </td>
+                                                <td><textarea data-ng-disabled="cotizacion.idCotizacion != null || product.productoId == null" data-ng-model="product.descripcion" class="form-control" rows="1"></textarea></td>
+                                                <td data-ng-if="cotizacion.idCotizacion == null">{{product.available_quantity}}</td>
+                                                <td><input data-ng-disabled="cotizacion.idCotizacion != null || product.productoId == null" type="number" data-ng-change="recalculateTotal(product)" min="1" step="1" data-ng-model="product.cantidad" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                                <td><input data-ng-disabled="cotizacion.idCotizacion != null || product.productoId == null" id="inputValorUnitario{{product.rowPosition}}" type="number" data-ng-blur="removeZeros(product)" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.valorunitario" class="form-control"></td>
+                                                <td><input data-ng-disabled="cotizacion.idCotizacion != null || product.productoId == null" id="inputDescuento{{product.rowPosition}}" type="number" data-ng-blur="removeZeros(product)" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.descuento" class="form-control"></td>
+                                                <td data-ng-if="cotizacion.idCotizacion == null">
+                                                    <select id="slImpuesto{{product.rowPosition}}" data-ng-disabled="product.productoId == null" data-ng-model="product.taxId" data-ng-change="setTax(product)" class="form-control" style="width:100%">
+                                                        <option data-ng-repeat="taxiItem in product.taxesList" value="{{taxiItem.id}}" data-select2-id="{{taxiItem.id}}">{{taxiItem.name}}</option>
+                                                    </select>
+                                                </td>
+                                                <td>{{product.totalProducto}}</td>
+                                                <td>
+                                                    <button type="button" data-ng-disabled="product.productoId == null" style='height: 1rem;' data-toggle='tooltip' title='Actualizar producto' class='btn btn-sm btn-icon' ng-click='openModal($index)'><i class='fa fa-edit'></i></button>
+                                                    <button data-ng-if="cotizacion.idCotizacion == null" type="button" style='height: 1rem;' data-toggle='tooltip' title='Eliminar producto' class='btn btn-sm btn-icon' ng-click='removeProducto($index)'><i class='fa fa-trash'></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                <input type="text" class="form-control" ng-model="invoice.UnitValue" placeholder="Valor" />
-
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: right;">
-                            <button data-ng-if="cotizacion.idCotizacion == null" type="button" class="btn btn-primary" data-ng-click="addProduct()">Añadir producto</button>
-                        </div>
-
-                        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th style="min-width:300px">Producto</th>
-                                        <th>Descripción</th>
-                                        <th data-ng-if="cotizacion.idCotizacion == null">Disponible</th>
-                                        <th>Cant</th>
-                                        <th>Valor Unitario</th>
-                                        <th>% Desc.</th>
-                                        <th data-ng-if="cotizacion.idCotizacion == null">Impuesto Cargo</th>
-                                        <th>Valor Total</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="product in dataGridProduct">
-                                        <td>{{$index + 1}}</td>
-                                        <td>
-                                            <div class="form-group" style="height:30px">
-                                                <select data-ng-disabled="cotizacion.idCotizacion != null" id="TslProducto{{product.rowPosition}}" data-ng-model="product.productoId" data-ng-change="setProduct(product)" class="form-control" style="width:100%">
-                                                    <option data-ng-repeat="itemProducto in productList" value="{{itemProducto.id}}" data-select2-id="{{itemProducto.id}}">{{itemProducto.name}}</option>
-                                                </select>
-
-                                            </div>
-                                        </td>
-                                        <td><textarea data-ng-disabled="cotizacion.idCotizacion != null || product.productoId == null" data-ng-model="product.descripcion" class="form-control" rows="1"></textarea></td>
-                                        <td data-ng-if="cotizacion.idCotizacion == null">{{product.available_quantity}}</td>
-                                        <td><input data-ng-disabled="cotizacion.idCotizacion != null || product.productoId == null" type="number" data-ng-change="recalculateTotal(product)" min="1" step="1" data-ng-model="product.cantidad" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
-                                        <td><input data-ng-disabled="cotizacion.idCotizacion != null || product.productoId == null" id="inputValorUnitario{{product.rowPosition}}" type="number" data-ng-blur="removeZeros(product)" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.valorunitario" class="form-control"></td>
-                                        <td><input data-ng-disabled="cotizacion.idCotizacion != null || product.productoId == null" id="inputDescuento{{product.rowPosition}}" type="number" data-ng-blur="removeZeros(product)" data-ng-change="recalculateTotal(product)" min="0" step="0.1" data-ng-model="product.descuento" class="form-control"></td>
-                                        <td data-ng-if="cotizacion.idCotizacion == null">
-                                            <select id="slImpuesto{{product.rowPosition}}" data-ng-disabled="product.productoId == null" data-ng-model="product.taxId" data-ng-change="setTax(product)" class="form-control" style="width:100%">
-                                                <option data-ng-repeat="taxiItem in product.taxesList" value="{{taxiItem.id}}" data-select2-id="{{taxiItem.id}}">{{taxiItem.name}}</option>
-                                            </select>
-                                        </td>
-                                        <td>{{product.totalProducto}}</td>
-                                        <td>
-                                            <button type="button" data-ng-disabled="product.productoId == null" style='height: 1rem;' data-toggle='tooltip' title='Actualizar producto' class='btn btn-sm btn-icon' ng-click='openModal($index)'><i class='fa fa-edit'></i></button>
-                                            <button data-ng-if="cotizacion.idCotizacion == null" type="button" style='height: 1rem;' data-toggle='tooltip' title='Eliminar producto' class='btn btn-sm btn-icon' ng-click='removeProducto($index)'><i class='fa fa-trash'></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-lg-3 col-md-3 col-sm-3 offset-md-9 form-group" style="text-align: left; float: left; margin-left: 1px">
                                 <button type="button"
                                         class="btn btn-primary"
-                                        data-ng-click="generateInvoice()">
-                                    Generar factura
+                                        data-ng-click="saveInvoice()">
+                                    Guardar
                                 </button>
                             </div>
                         </div>

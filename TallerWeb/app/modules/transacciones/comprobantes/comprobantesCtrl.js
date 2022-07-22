@@ -24,6 +24,7 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
         let creditValue = 0;
         $scope.listProductQuotationId = [];
         let ReceiptId = parseInt($scope.accountingReceiptTypes.find(x => x.Code == '13').Id);
+        let creationdate = new Date()
 
         $scope.listQuotationGrid.api.forEachNode(function (row, node) {
             if (row.selected === true) {
@@ -67,7 +68,7 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
             "document": {
                 "id": ReceiptId
             },
-            "date": "2022-07-21",
+            "date": creationdate.toISOString().split('T')[0],
             "items": items,
             "observations": "Comprobante contable"
         }
@@ -129,7 +130,6 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
                 Swal.fire('Los cambios no se guardaron', '', 'info')
             }
         })
-
     };
 
     function confirmSaveQuotationQuantity(event) {
@@ -279,8 +279,6 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
         let customerId = typeof $scope.CustomerId == 'undefined' ? '00000000-0000-0000-0000-000000000000' : $scope.CustomerId;
         let quotationId = typeof $scope.IdCotizacion == 'undefined' ? -1 : $scope.IdCotizacion;
         let creationDate = typeof $scope.document.fecha == 'undefined' ? '' : $scope.document.fecha;
-
-
 
         var dataSP = {
             "StoredProcedureName": "GetQuotationForProof",

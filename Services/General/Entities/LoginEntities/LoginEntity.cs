@@ -21,5 +21,7 @@ namespace Services.General.Entities.LoginEntities
         public DateTime creationdatetoken { get; set; }
         public string Customers { get; set; }
         public string Receipt { get; set; }
+        public string Invoice { get; set; }
+
     }
 }

@@ -4,7 +4,6 @@ module.controller('facturacionController', ["$scope", '$rootScope', "$location",
 function facturacionController($scope, $rootScope, $location, GeneralService) {
 
     GeneralService.hideGeneralButtons();
-
     //#region variables
     $rootScope.showSaveButton = true;
     $scope.aLanguage = aLanguage;
@@ -13,10 +12,14 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
     $scope.dataGridProduct = [];
     $scope.customerList = [];
     $scope.quoteList = [];
-    $scope.quoteSelected = [];
+    $scope.receiptSelected = [];
     $scope.dataGridProduct = [];
     $scope.rowPosition = 0;
     $scope.productList = [];
+    $scope.codesReceipt = [];
+    $scope.receiptName = '';
+    $scope.settings = [];
+    $scope.accountingReceiptTypes = [];
     $scope.newProduct = {
         descripcion: '',
         productoId: null,
@@ -33,26 +36,107 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
     //#endregion variables
 
     //#region factura
-    $scope.selectQuotes = function () {
-        $scope.quoteSelected = $scope.quoteList.filter(x => x.CustomerId == $scope.CustomerId);
-        if ($scope.quoteSelected.length === 0) {
-            GeneralService.showToastR({
-                body: aLanguage.NotQuotationFoundByClient,
-                type: 'info'
-            });
+    function saveSiigoInvoice() {
+        let items = []
+        let creditValue = 0;
+        $scope.listProductQuotationId = [];
+        let creationdate = new Date();
+
+        $scope.listRecepitGrid.api.forEachNode(function (row, node) {
+            if (row.selected === true) {
+                creditValue += parseFloat(row.data.ValorUnitario);
+                $scope.listProductQuotationId.push({ 'ProductQuotationId': row.data.IdProductoCotizacion });
+                items.push(
+                    {
+                        "code": row.data.code.replace(/ /g, ''),
+                        "description": row.data.DescripcionProducto,
+                        "quantity": parseInt(row.data.Cantidad),
+                        "price": parseFloat(row.data.ValorUnitario),
+                        "discount": parseFloat(row.data.DescuentoTotal),
+                        "taxes": [] //(Opcional) Array con los id de los impuestos tipo ReteICA, ReteIVA o Autoretención
+                    }
+                );
+            }
+        });
+
+        let invoice =
+        {
+            "document": {
+                "id": 26870 //Identificador del tipo de comprobante ejemplo Factura electrónica de venta : https://api.siigo.com/v1/document-types?type=FV
+            },
+            "date": creationdate.toISOString().split('T')[0],
+            "customer": {
+                "identification": $scope.settings[0].NIT,//	Array de los datos del cliente asociados a la factura.
+                "branch_office": 0
+            },
+            "cost_center": [],//(Opcional) Identificador del Centro de costos.
+            "seller": 735, //Identificador asociado a la factura --User name  en este caso se toma de ejemplo : ventas@agroequiposalpujarra.com
+            "observations": "Observaciones",
+            "items": items,
+            "payments": [
+                {
+                    "id": 29, //Crédito- prueba
+                    "value": creditValue,
+                    "due_date": creationdate.toISOString().split('T')[0]
+                } //Array de las formas de pago asociadas a la factura. https://api.siigo.com/v1/payment-types?document_type=FV
+            ],
+            "additional_fields": {}
         }
-    };
+
+        let Invoice = angular.copy(GeneralService.userLogin);
+        Invoice.Invoice = JSON.stringify(invoice);
+
+        GeneralService.executeAjax({
+            url: 'api/CreateInvoice',
+            data: Invoice,
+            success: function (response) {
+                var result = JSON.parse(response);
+                if (result) {
+                    if (result.Errors) {
+                        GeneralService.showToastR({
+                            body: result.Errors[0].Code,
+                            type: 'error'
+                        });
+                    } else {
+                        saveInvoice(result);
+                    }
+                } else {
+                    GeneralService.showToastR({
+                        body: result.Errors[0].Code,
+                        type: 'error'
+                    });
+                }
+            }
+        });
+    }
+
 
     $scope.generateInvoice = function () {
+        let isValidSelected = false;
+
+        $scope.listRecepitGrid.api.forEachNode(function (row, node) {
+            if (row.selected === true) {
+                isValidSelected = true;
+            }
+        });
+
+        if (!isValidSelected) {
+            GeneralService.showToastR({
+                body: 'Debes selecionar al menos un comprobante',
+                type: 'info'
+            });
+            return;
+        }
+
         Swal.fire({
-            title: 'Está seguro de guardar la factura?',
+            title: 'Está seguro de generar la factura?',
             showDenyButton: true,
             confirmButtonText: 'Guardar',
             denyButtonText: `Cancelar`,
         }).then((result) => {
             if (result.isConfirmed) {
-                updateQuotationQuantity(data);
-                Swal.fire('Cambios guardados!', '', 'success')
+                saveSiigoInvoice();
+                Swal.fire('Comprobante generado!', '', 'success')
             } else if (result.isDenied) {
                 Swal.fire('Los cambios no se guardaron', '', 'info')
             }
@@ -88,6 +172,32 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
     //#endregion factura
 
     //#region execute procedures
+    function saveInvoice(resultSiigo) {
+        $scope.ReceiptName = resultSiigo.name;
+        var dataSP = {
+            "StoredProcedureName": "saveInvoice",
+            "StoredParams": [
+                { Name: "JsonProductQuotationId", Value: JSON.stringify($scope.listProductQuotationId) },
+                { Name: "InvoiceId", Value: resultSiigo.id },
+                { Name: "InvoiceName", Value: $scope.ReceiptName },
+                { Name: "Username", Value: GeneralService.userLogin.UserCompleteName },
+            ]
+        };
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    GeneralService.showToastR({
+                        body: `${aLanguage.saveSuccessful} comprobante: ${$scope.ReceiptName}`,
+                        type: 'success'
+                    });
+                }
+            }
+        });
+    }
+
+
     $scope.loadProducts = function () {
         var dataSP = {
             "StoredProcedureName": "GetProducts",
@@ -105,9 +215,9 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
         });
     };
 
-    $scope.loadQuotes = function () {
+    $scope.loadReceipt = function () {
         var dataSP = {
-            "StoredProcedureName": "GetCotizaciones",
+            "StoredProcedureName": "GetCodesReceipt",
             "StoredParams": []
         };
 
@@ -116,7 +226,7 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
             data: dataSP,
             success: function (response) {
                 if (response.Exception === null) {
-                    $scope.quoteList = angular.copy(response.Value[0].DataMapped);
+                    $scope.codesReceipt = angular.copy(response.Value[0].DataMapped);
                 }
             }
         });
@@ -150,14 +260,14 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
 
     $scope.SearchInvoice = function () {
         let customerId = typeof $scope.CustomerId == 'undefined' ? '00000000-0000-0000-0000-000000000000' : $scope.CustomerId;
-        let quotationId = typeof $scope.IdCotizacion == 'undefined' ? -1 : $scope.IdCotizacion;
+        let receiptName = typeof $scope.receiptName == 'undefined' ? '' : $scope.receiptName;
         let creationDate = typeof $scope.document.fecha == 'undefined' ? '' : $scope.document.fecha;
 
         var dataSP = {
-            "StoredProcedureName": "GetQuotationForProof",
+            "StoredProcedureName": "GetReceipt",
             "StoredParams": [
                 { Name: "CustomerId", Value: customerId },
-                { Name: "QuotationId", Value: quotationId },
+                { Name: "ReceiptName", Value: receiptName },
                 { Name: "CreationDate", Value: creationDate }
             ]
         };
@@ -168,13 +278,13 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
                 if (response.Exception === null) {
                     let data = response.Value[0].DataMapped;
                     if (data.length == 0) {
-                        $scope.listQuotationGrid.api.setRowData([]);
+                        $scope.listRecepitGrid.api.setRowData([]);
                         GeneralService.showToastR({
                             body: aLanguage.NotFound,
                             type: 'info'
                         });
                     } else {
-                        $scope.listQuotationGrid.api.setRowData(data);
+                        $scope.listRecepitGrid.api.setRowData(data);
                         GeneralService.showToastR({
                             body: aLanguage.RecordsLoaded,
                             type: 'success'
@@ -185,39 +295,56 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
         });
     };
 
-    function updateQuotationQuantity(data) {
+    $scope.loadSettings = function () {
         var dataSP = {
-            "StoredProcedureName": "UpdateQuotation",
-            "StoredParams": [
-                { Name: "Username", Value: GeneralService.userLogin.UserCompleteName },
-                { Name: "Quantity", Value: parseInt(data.Cantidad) },
-                { Name: "IdProductoCotizacion", Value: data.IdProductoCotizacion }
-            ]
+            "StoredProcedureName": "GetSettings",
+            "StoredParams": []
         };
+
         GeneralService.executeAjax({
             url: 'api/executeStoredProcedure',
             data: dataSP,
             success: function (response) {
                 if (response.Exception === null) {
-                    $scope.SearchInvoice();
-                    GeneralService.showToastR({
-                        body: aLanguage.saveSuccessful,
-                        type: 'success'
-                    });
+                    $scope.settings = angular.copy(response.Value[0].DataMapped);
                 }
             }
         });
+    };
 
+    $scope.loadAccountingReceiptTypes = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetAccountingReceiptTypes",
+            "StoredParams": []
+        };
 
-    }
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    $scope.accountingReceiptTypes = angular.copy(response.Value[0].DataMapped);
+                }
+            }
+        });
+    };
     //#endregion execute procedures
 
     //#region grid definition
 
     $scope.aLanguage = aLanguage;
     $scope.columnDefs = [
-        { headerName: 'Id Comprobante', field: "IdProof", width: 180 },
-        { headerName: 'Nombre Producto', field: "name", width: 180 },
+        {
+            headerName: '',
+            field: '',
+            width: 60,
+            headerCheckboxSelection: true,
+            headerCheckboxSelectionFilteredOnly: true,
+            checkboxSelection: true,
+            tooltipField: ''
+        },
+        { headerName: 'Comprobante', field: "ReceiptName", width: 180 },
+        { headerName: 'Nombre Producto', field: "ProductName", width: 180 },
         { headerName: 'Cantidad', field: "Cantidad", width: 160 },
         { headerName: 'Valor Unitario', field: "ValorUnitario", width: 180 },
         { headerName: 'Cantidad Pendiente', field: "CantidadPendiente", width: 180 },
@@ -233,7 +360,7 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
 
     $scope.rowData = [];
 
-    $scope.listQuotationGrid = {
+    $scope.listRecepitGrid = {
         localeText: $scope.aLanguage.localeTextAgGrid,
         columnDefs: $scope.columnDefs,
         rowData: $scope.rowData,
@@ -254,12 +381,25 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
     angular.element(document).ready(init);
     function init() {
         $scope.loadCustomers();
-        $scope.loadQuotes();
+        $scope.loadReceipt();
         $scope.loadProducts();
+        $scope.loadSettings();
+        $scope.loadAccountingReceiptTypes();
     };
     //#endregion init
 
     //#region helpers
+    $scope.selectReceipt = function () {
+        $scope.receiptSelected = $scope.codesReceipt.filter(x => x.CustomerId == $scope.CustomerId);
+        if ($scope.receiptSelected.length === 0) {
+            $scope.receiptName = '';
+            GeneralService.showToastR({
+                body: 'No se encontraron comprobantes asociados a este cliente',
+                type: 'info'
+            });
+        }
+    };
+
     $(document).ready(function () {
         $('.datepicker').datepicker({
             format: 'yyyy/mm/dd'

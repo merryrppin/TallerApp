@@ -40,6 +40,14 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [Route("api/CreateInvoice")]
+        public Task<string> CreateInvoice(LoginEntity loginresp)
+        {
+            return _administrationService.CreateInvoice(loginresp);
+        }
+        
+
+        [HttpPost]
         [Route("api/PrintPDF")]
         public string PrintPDF(PDFEntity PDFEntityInput)
         {

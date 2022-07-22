@@ -136,6 +136,8 @@
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\SaveOrUpdateAccountingReceiptTypes.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\tblAccountingReceiptTypes.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetAccountingReceiptTypes.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetReceipt.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\GetCodesReceipt.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Taller.refactorlog" />

@@ -23,7 +23,7 @@
 
 @media (min-width: 700px) {
     .modal-dialog.invoiceModal {
-        max-width: 80%;
+        max-width: 65%;
         max-height: 80%;
     }
 }

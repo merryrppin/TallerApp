@@ -436,6 +436,26 @@ namespace Services.General
             }
         }
 
+        public async Task<string> CreateInvoice(LoginEntity loginResp)
+        {
+            string url = string.Format("{0}/v1/invoices", UrlSiigo);
+            HttpClient client = new HttpClient();
+            string contents = string.Empty;
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "/v1/invoices"))
+            {
+                request.Content = new StringContent(loginResp.Invoice, Encoding.UTF8, "application/json");
+                client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
+                using (HttpContent content = request.Content)
+                {
+                    HttpResponseMessage response = (await client.PostAsync(url, content));
+                    contents = await response.Content.ReadAsStringAsync();
+
+                }
+            }
+            return contents;
+        }
+        
+
         #endregion
     }
 }

@@ -1,0 +1,6 @@
+﻿CREATE TABLE tblSettings
+(
+NIT VARCHAR(50) UNIQUE,
+CodeDebit VARCHAR(100),
+CodeCredit VARCHAR(100)
+)

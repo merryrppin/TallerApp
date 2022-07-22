@@ -20,5 +20,6 @@ namespace Services.General.Entities.LoginEntities
         public string daydiff { get; set; }
         public DateTime creationdatetoken { get; set; }
         public string Customers { get; set; }
+        public string Receipt { get; set; }
     }
 }

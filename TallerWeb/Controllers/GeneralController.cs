@@ -33,10 +33,10 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Route("api/CreateCustomer")]
-        public Task<string> CreateCustomer(LoginEntity loginresp)
+        [Route("api/CreateReceipt")]
+        public Task<string> CreateReceipt(LoginEntity loginresp)
         {
-            return _administrationService.CreateCustomer(loginresp);
+            return _administrationService.CreateReceipt(loginresp);
         }
 
         [HttpPost]

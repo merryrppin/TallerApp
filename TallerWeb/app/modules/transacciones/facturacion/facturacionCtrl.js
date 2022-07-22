@@ -124,7 +124,7 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
 
     $scope.loadCustomers = function () {
         var dataSP = {
-            "StoredProcedureName": "GetCustomersTest",
+            "StoredProcedureName": "GetCustomersTest",//TODO modificar a sp real
             "StoredParams": []
         };
 

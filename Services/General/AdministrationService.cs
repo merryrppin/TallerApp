@@ -9,9 +9,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using static Services.General.Enums.Enums;
@@ -23,12 +21,14 @@ namespace Services.General
         private ManageExceptions ManageExceptions;
         private string ConnString;
         private string UrlSiigo;
+        private bool syncInfoSiigo;
 
         public AdministrationService()
         {
             ManageExceptions = new ManageExceptions();
             ConnString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
             UrlSiigo = ConfigurationManager.AppSettings["UrlSiigo"].ToString();
+            syncInfoSiigo = Convert.ToBoolean(ConfigurationManager.AppSettings["SyncInfoSiigo"].ToString());
         }
 
         #region Stored Procedure
@@ -141,9 +141,13 @@ namespace Services.General
                                     {
                                         await LoginSiigoAsync(loginResp);
                                     }
-                                    await LoadProductsSiigo(loginResp);
-                                    await LoadCustomersSiigo(loginResp);
-                                    // await GetWarehouses(loginResp);
+                                    if (syncInfoSiigo)
+                                    {
+                                        await LoadProductsSiigo(loginResp);
+                                        await LoadCustomersSiigo(loginResp);
+                                        await LoadWareHouses(loginResp);
+                                        await LoadAccountingReceiptTypes(loginResp);
+                                    }
                                 }
                             }
                         }
@@ -353,26 +357,85 @@ namespace Services.General
 
         }
 
-        public async Task<string> GetWarehouses(LoginEntity loginResp)
+        public async Task LoadWareHouses(LoginEntity loginResp)
         {
             string jsonWarehouses = "";
             string url = string.Format("{0}v1/warehouses", UrlSiigo);
             HttpClient client = new HttpClient();
-
             using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/warehouses"))
             {
                 client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
                 using (HttpContent content = request.Content)
                 {
                     HttpResponseMessage response = (await client.GetAsync(url));
-                    string contents = await response.Content.ReadAsStringAsync();
-                    ResultSiigoEntity objWarehouses = JsonConvert.DeserializeObject<ResultSiigoEntity>(contents);
-
-                    jsonWarehouses = JsonConvert.SerializeObject(objWarehouses.results);
+                    jsonWarehouses = await response.Content.ReadAsStringAsync();
                 }
             }
-            return jsonWarehouses;
+
+            StoredObjectParams StoredObjectParams = new StoredObjectParams
+            {
+                StoredProcedureName = "SaveOrUpdateWareHouse",
+                StoredParams = new List<StoredParams> {
+                    new StoredParams {Name = "JsonWarehouses", Value = jsonWarehouses }
+                }
+            };
+
+            StoredObjectResponse StoredObjectResponse = ExecuteStoredProcedure(StoredObjectParams);
+            if (StoredObjectResponse.Exception != null)
+            {
+                throw StoredObjectResponse.Exception;
+            }
         }
+
+        public async Task<string> CreateReceipt(LoginEntity loginResp)
+        {
+            string url = string.Format("{0}/v1/journals", UrlSiigo);
+            HttpClient client = new HttpClient();
+            string contents = string.Empty;
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "/v1/journals"))
+            {
+                request.Content = new StringContent(loginResp.Receipt, Encoding.UTF8, "application/json");
+                client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
+                using (HttpContent content = request.Content)
+                {
+                    HttpResponseMessage response = (await client.PostAsync(url, content));
+                    contents = await response.Content.ReadAsStringAsync();
+
+                }
+            }
+            return contents;
+        }
+
+        public async Task LoadAccountingReceiptTypes(LoginEntity loginResp)
+        {
+            string accountingReceiptTypes = "";
+            string url = string.Format("{0}v1/document-types?type=CC", UrlSiigo);
+            HttpClient client = new HttpClient();
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "v1/document-types?type=CC"))
+            {
+                client.DefaultRequestHeaders.Add("Authorization", loginResp.access_token);
+                using (HttpContent content = request.Content)
+                {
+                    HttpResponseMessage response = (await client.GetAsync(url));
+                    accountingReceiptTypes = await response.Content.ReadAsStringAsync();
+                }
+            }
+
+            StoredObjectParams StoredObjectParams = new StoredObjectParams
+            {
+                StoredProcedureName = "SaveOrUpdateAccountingReceiptTypes",
+                StoredParams = new List<StoredParams> {
+                    new StoredParams {Name = "JsonAccountingReceiptTypes", Value = accountingReceiptTypes }
+                }
+            };
+
+            StoredObjectResponse StoredObjectResponse = ExecuteStoredProcedure(StoredObjectParams);
+            if (StoredObjectResponse.Exception != null)
+            {
+                throw StoredObjectResponse.Exception;
+            }
+        }
+
         #endregion
     }
 }

@@ -1,4 +1,7 @@
-﻿--[param].[tblMenu]
+﻿--Settings
+INSERT INTO tblSettings (NIT, CodeDebit, CodeCredit) SELECT '901492867', '143502', '11050501'
+
+--[param].[tblMenu]
 SET IDENTITY_INSERT [param].[tblMenu] ON
 
 INSERT INTO [param].[tblMenu]([MenuId],[Name],[Description],[Icon],[ParentMenuId],[Order],[Active],[Url],[Level]) VALUES(1,'Configuración','','flaticon2-gear',NULL,100,1,'',0);

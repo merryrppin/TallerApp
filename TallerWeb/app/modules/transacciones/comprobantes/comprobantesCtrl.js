@@ -4,93 +4,94 @@ module.controller('comprobantesController', ["$scope", '$rootScope', "$location"
 function comprobantesController($scope, $rootScope, $location, GeneralService) {
 
     GeneralService.hideGeneralButtons();
-
     //#region variables
     $rootScope.showSaveButton = true;
     $scope.aLanguage = aLanguage;
-    $scope.account = "14350101";
     $scope.document = { id: 0, fecha: moment().format('YYYY/MM/DD'), usuario: GeneralService.userLogin.UserCompleteName };
-    $scope.comprobanteDetalleDebito = {
-
-        codeaccount: $scope.account,
-        movement: "Debit",
-        identification: "901492867",
-        branch_office: "0",
-        productId: null,
-        productoId: null,
-        warehouse: "",
-        quantity: 0,
-        description: "",
-        value: 0
-
-    };
-
     $scope.productList = [];
     $scope.dataGridProduct = [];
     $scope.customerList = [];
     $scope.quoteList = [];
     $scope.quoteSelected = [];
+    $scope.wareHouses = [];
+    $scope.settings = [];
+    $scope.accountingReceiptTypes = [];
     //#endregion variables
 
     //#region comprobante
-    $scope.comprobante = { document: { id: "" }, date: null, items: [], observations: "" };
-    $scope.saveComprobante = function () {
+    function saveSiigoReceipt() {
+        let items = []
+        let creditValue = 0;
+        $scope.listProductQuotationId = [];
+        let ReceiptId = parseInt($scope.accountingReceiptTypes.find(x => x.Code == '13').Id);
+
+        $scope.listQuotationGrid.api.forEachNode(function (row, node) {
+            if (row.selected === true) {
+                creditValue += parseFloat(row.data.ValorUnitario);
+                $scope.listProductQuotationId.push({ 'ProductQuotationId': row.data.IdProductoCotizacion });
+                items.push(
+                    {
+                        "account": {
+                            "code": $scope.settings[0].CodeDebit,
+                            "movement": "Debit"
+                        },
+                        "customer": {
+                            "identification": $scope.settings[0].NIT,
+                            "branch_office": "0"
+                        },
+                        "cost_center": [],
+                        "description": row.data.DescripcionProducto,
+                        "value": parseFloat(row.data.ValorUnitario)
+                    },
+                );
+            }
+        });
+
+        items.push(
+            {
+                "account": {
+                    "code": $scope.settings[0].CodeCredit,
+                    "movement": "Credit"
+                },
+                "customer": {
+                    "identification": $scope.settings[0].NIT,
+                    "branch_office": "0"
+                },
+                "cost_center": [],
+                "description": "Comprobante contable",
+                "value": creditValue
+            });
+
+        let receipt =
+        {
+            "document": {
+                "id": ReceiptId
+            },
+            "date": "2022-07-21",
+            "items": items,
+            "observations": "Comprobante contable"
+        }
+
+        let Receipt = angular.copy(GeneralService.userLogin);
+        Receipt.Receipt = JSON.stringify(receipt);
+
         GeneralService.executeAjax({
-            url: 'api/GetNumberCC',
-            data: GeneralService.userLogin,
+            url: 'api/CreateReceipt',
+            data: Receipt,
             success: function (response) {
-                if (response.Value) {
-                    var totalCredit = 0;
-                    $scope.comprobante.date = $scope.document.fecha;
-                    $.each($scope.dataGridProduct, function (i, objProduct) {
-
-                        var newProduct = {
-                            account: { code: $scope.account, movement: "Debit" },
-                            customer: { identification: "901492867", branch_office: "0" },
-                            product: { code: objProduct.code, warehouse: objProduct.warehouse, quantity: objProduct.quantity },
-                            description: objProduct.description,
-                            value: objProduct.value
-                        };
-                        totalCredit += objProduct.value;
-                        $scope.comprobante.items.push(newProduct);
-                    });
-                    var newProductCredit = {
-                        account: { code: "11050501", movement: "Credit" },
-                        customer: { identification: "901492867", branch_office: "0" },
-                        description: "Credito",
-                        value: totalCredit
-                    };
-                    $scope.comprobante.items.push(newProductCredit);
-
-                    var dataSP = {
-                        "StoredProcedureName": "SaveComprobante",
-                        "StoredParams": [{
-                            Name: "jsonComprobante",
-                            Value: JSON.stringify($scope.comprobante)
-                        }]
-                    };
-
-                    GeneralService.executeAjax({
-                        url: 'api/executeStoredProcedure',
-                        data: dataSP,
-                        success: function (response) {
-                            if (response.Value.length === 0) {
-                                GeneralService.showToastR({
-                                    body: aLanguage.saveSuccessful,
-                                    type: 'success'
-                                });
-                                $location.path('/listUsers');
-                            } else {
-                                GeneralService.showToastR({
-                                    body: aLanguage[response.GeneralError],
-                                    type: 'error'
-                                });
-                            }
-                        }
-                    });
+                var result = JSON.parse(response);
+                if (result) {
+                    if (result.Errors) {
+                        GeneralService.showToastR({
+                            body: result.Errors[0].Code,
+                            type: 'error'
+                        });
+                    } else {
+                        saveReceipt(result);
+                    }
                 } else {
                     GeneralService.showToastR({
-                        body: aLanguage[response.GeneralError],
+                        body: result.Errors[0].Code,
                         type: 'error'
                     });
                 }
@@ -98,62 +99,12 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
         });
     }
 
-    $scope.selectQuotes = function () {
-        $scope.quoteSelected = $scope.quoteList.filter(x => x.CustomerId == $scope.CustomerId);
-        if ($scope.quoteSelected.length === 0) {
-            GeneralService.showToastR({
-                body: aLanguage.NotQuotationFoundByClient,
-                type: 'info'
-            });
-        }
-    };
-
-    $scope.generateProof = function () {
-        let items = []
+    $scope.generateReceipt = function () {
         let isValidSelected = false;
+
         $scope.listQuotationGrid.api.forEachNode(function (row, node) {
             if (row.selected === true) {
                 isValidSelected = true;
-                items.push(
-                    {
-                        "account": {
-                            "code": "14350101",//quemado
-                            "movement": "Debit"//quemado
-                        },
-                        "customer": {
-                            "identification": "109048401",//quemado
-                            "branch_office": "0"//quemado
-                        },
-                        "cost_center": 233, //aplica si en la definicion esta marcado para uso,
-                        "product": {
-                            "code": row.data.code,
-                            "warehouse": 19, //id bodega source
-                            "quantity": row.data.CantidadPendiente
-                        },
-                        "description": row.data.DescripcionProducto,
-                        "value": row.data.ValorUnitario
-                    },
-                    {
-                        "account": {
-                            "code": "11050501",//quemado
-                            "movement": "Credit"//quemado
-                        },
-                        "customer": {
-                            "identification": "109048401",//quemado
-                            "branch_office": "0"//quemado
-                        },
-
-                        "product": {
-                            "code": row.data.code,
-                            "warehouse": 19, //id bodega destino
-                            "quantity": row.data.CantidadPendiente
-                        },
-
-                        "description": row.data.DescripcionProducto, //Descripción opcional del credito
-                        "cost_center": 233, //aplica si en la definicion esta marcado para uso,
-                        "value": row.data.ValorUnitario
-                    }
-                );
             }
         });
 
@@ -165,15 +116,20 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
             return;
         }
 
-        let proof =
-        {
-            "document": {
-                "id": 27441 //identificador de CC
-            },
-            "date": "2015-12-15",
-            "items": items,
-            "observations": "Observaciones"
-        }
+        Swal.fire({
+            title: aLanguage.WantSaveChanges,
+            showDenyButton: true,
+            confirmButtonText: 'Guardar',
+            denyButtonText: `Cancelar`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                saveSiigoReceipt();
+                Swal.fire('Comprobante generado!', '', 'success')
+            } else if (result.isDenied) {
+                Swal.fire('Los cambios no se guardaron', '', 'info')
+            }
+        })
+
     };
 
     function confirmSaveQuotationQuantity(event) {
@@ -198,6 +154,84 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
     //#endregion comprobante
 
     //#region execute procedures
+    $scope.loadAccountingReceiptTypes = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetAccountingReceiptTypes",
+            "StoredParams": []
+        };
+
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    $scope.accountingReceiptTypes = angular.copy(response.Value[0].DataMapped);
+                }
+            }
+        });
+    };
+
+    $scope.loadSettings = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetSettings",
+            "StoredParams": []
+        };
+
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    $scope.settings = angular.copy(response.Value[0].DataMapped);
+                }
+            }
+        });
+    };
+
+    function saveReceipt(resultSiigo) {
+        $scope.ReceiptName = resultSiigo.name;
+        var dataSP = {
+            "StoredProcedureName": "SaveReceipt",
+            "StoredParams": [
+                { Name: "JsonProductQuotationId", Value: JSON.stringify($scope.listProductQuotationId) },
+                { Name: "ReceiptId", Value: resultSiigo.id },
+                { Name: "ReceiptName", Value: $scope.ReceiptName},
+                { Name: "Username", Value: GeneralService.userLogin.UserCompleteName },
+            ]
+        };
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    GeneralService.showToastR({
+                        body: `${aLanguage.saveSuccessful } comprobante: ${$scope.ReceiptName}`,
+                        type: 'success'
+                    });
+                }
+            }
+        });
+    }
+
+
+    $scope.loadWareHouses = function () {
+        var dataSP = {
+            "StoredProcedureName": "GetWareHouses",
+            "StoredParams": []
+        };
+
+        GeneralService.executeAjax({
+            url: 'api/executeStoredProcedure',
+            data: dataSP,
+            success: function (response) {
+                if (response.Exception === null) {
+                    $scope.wareHouses = angular.copy(response.Value[0].DataMapped);
+                }
+            }
+        });
+    };
+
+
     $scope.loadQuotes = function () {
         var dataSP = {
             "StoredProcedureName": "GetCotizaciones",
@@ -215,26 +249,9 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
         });
     };
 
-    $scope.loadProducts = function () {
-        var dataSP = {
-            "StoredProcedureName": "GetProducts",
-            "StoredParams": []
-        };
-
-        GeneralService.executeAjax({
-            url: 'api/executeStoredProcedure',
-            data: dataSP,
-            success: function (response) {
-                if (response.Exception === null) {
-                    $scope.productList = angular.copy(response.Value[0].DataMapped);
-                }
-            }
-        });
-    };
-
     $scope.loadCustomers = function () {
         var dataSP = {
-            "StoredProcedureName": "GetCustomersTest",
+            "StoredProcedureName": "GetCustomersTest",//TODO modificar a sp real
             "StoredParams": []
         };
 
@@ -319,8 +336,6 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
                 }
             }
         });
-
-
     }
     //#endregion execute procedures
 
@@ -378,9 +393,11 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
     //#region init
     angular.element(document).ready(init);
     function init() {
-        $scope.loadProducts();
         $scope.loadCustomers();
         $scope.loadQuotes();
+        $scope.loadWareHouses();
+        $scope.loadSettings();
+        $scope.loadAccountingReceiptTypes();
     };
     //#endregion init
 
@@ -419,5 +436,15 @@ function comprobantesController($scope, $rootScope, $location, GeneralService) {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
+
+    $scope.selectQuotes = function () {
+        $scope.quoteSelected = $scope.quoteList.filter(x => x.CustomerId == $scope.CustomerId);
+        if ($scope.quoteSelected.length === 0) {
+            GeneralService.showToastR({
+                body: aLanguage.NotQuotationFoundByClient,
+                type: 'info'
+            });
+        }
+    };
     //#endregion helpers
 }

@@ -1,8 +1,8 @@
-﻿CREATE PROCEDURE GetQuotationForProof(@CustomerId UNIQUEIDENTIFIER, @QuotationId INT, @CreationDate VARCHAR(20))
+﻿CREATE PROCEDURE GetQuotationForRecipt(@CustomerId UNIQUEIDENTIFIER, @QuotationId INT, @CreationDate VARCHAR(20))
 AS
 BEGIN
 
-	SELECT Product.name,QuotationProduct.IdProductoCotizacion,Product.code, QuotationProduct.DescripcionProducto, QuotationProduct.Cantidad, QuotationProduct.CantidadPendiente, QuotationProduct.ValorUnitario, QuotationProduct.TotalProducto, QuotationProduct.DescuentoTotal
+	SELECT Product.name, REPLACE(REPLACE(REPLACE(Customer.name,'"',''),'[',''),']','') AS CustomerName, QuotationProduct.IdProductoCotizacion,Product.code, QuotationProduct.DescripcionProducto, QuotationProduct.Cantidad, QuotationProduct.CantidadPendiente, QuotationProduct.ValorUnitario, QuotationProduct.TotalProducto, QuotationProduct.DescuentoTotal
 	FROM [dbo].[tblCotizaciones] AS Quotation
 		JOIN tblProductosCotizacion AS QuotationProduct ON Quotation.IdCotizacion = QuotationProduct.IdCotizacion
 		JOIN tblProducts AS Product ON QuotationProduct.IdProducto = Product.id

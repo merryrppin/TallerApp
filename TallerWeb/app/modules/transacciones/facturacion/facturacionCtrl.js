@@ -20,6 +20,7 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
     $scope.receiptName = '';
     $scope.settings = [];
     $scope.accountingReceiptTypes = [];
+    $scope.document.fecha = null;
     $scope.newProduct = {
         descripcion: '',
         productoId: null,
@@ -87,7 +88,7 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
         Invoice.Invoice = JSON.stringify(invoice);
 
         GeneralService.executeAjax({
-            url: 'api/CreateInvoice',
+          // url: 'api/CreateInvoice', TODO
             data: Invoice,
             success: function (response) {
                 var result = JSON.parse(response);
@@ -234,7 +235,7 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
 
     $scope.loadCustomers = function () {
         var dataSP = {
-            "StoredProcedureName": "GetCustomersTest",//TODO modificar a sp real
+            "StoredProcedureName": "GetCustomersForReceipt",
             "StoredParams": []
         };
 
@@ -261,7 +262,15 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
     $scope.SearchInvoice = function () {
         let customerId = typeof $scope.CustomerId == 'undefined' ? '00000000-0000-0000-0000-000000000000' : $scope.CustomerId;
         let receiptName = typeof $scope.receiptName == 'undefined' ? '' : $scope.receiptName;
-        let creationDate = typeof $scope.document.fecha == 'undefined' ? '' : $scope.document.fecha;
+        let creationDate = $scope.document.fecha == null ? '' : $scope.document.fecha;
+
+        if (creationDate == '' && receiptName == '' && customerId == '00000000-0000-0000-0000-000000000000') {
+            GeneralService.showToastR({
+                body: 'Seleccione al menos un parámetro para realizar la búsqueda',
+                type: 'info'
+            });
+            return;
+        }
 
         var dataSP = {
             "StoredProcedureName": "GetReceipt",
@@ -344,7 +353,9 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
             tooltipField: ''
         },
         { headerName: 'Comprobante', field: "ReceiptName", width: 180 },
-        { headerName: 'Nombre Producto', field: "ProductName", width: 180 },
+        { headerName: 'Producto', field: "ProductName", width: 180 },
+        { headerName: 'Cliente', field: "CustomerName", width: 180 },
+        { headerName: 'Fecha elaboración', field: "CreationDate", width: 180, valueFormatter: shortDateFormat, },
         { headerName: 'Cantidad', field: "Cantidad", width: 160 },
         { headerName: 'Valor Unitario', field: "ValorUnitario", width: 180 },
         { headerName: 'Cantidad Pendiente', field: "CantidadPendiente", width: 180 },
@@ -434,5 +445,10 @@ function facturacionController($scope, $rootScope, $location, GeneralService) {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
+
+
+    function shortDateFormat(value) {
+        return moment(value.data.CreationDate).format('YYYY/MM/DD')
+    }
     //#endregion helpers
 }

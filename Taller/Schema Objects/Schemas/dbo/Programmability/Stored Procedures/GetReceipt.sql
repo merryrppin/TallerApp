@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE GetReceipt(@CustomerId UNIQUEIDENTIFIER, @ReceiptName VARCHAR(100), @CreationDate VARCHAR(20))
 AS
 BEGIN
-	SELECT Receipt.Name ReceiptName, Product.name AS ProductName ,QuotationProduct.IdProductoCotizacion,Product.code, QuotationProduct.DescripcionProducto, ReceiptDetail.OriginalQuantity AS Cantidad, 
+	SELECT Receipt.Name ReceiptName,REPLACE(REPLACE(REPLACE(Customer.name,'"',''),'[',''),']','') AS CustomerName, Product.name AS ProductName ,Receipt.CreationDate, QuotationProduct.IdProductoCotizacion,Product.code, QuotationProduct.DescripcionProducto, ReceiptDetail.OriginalQuantity AS Cantidad, 
 			ReceiptDetail.QuantityPending AS CantidadPendiente, ReceiptDetail.UnitValue AS ValorUnitario, ReceiptDetail.TotalValue AS TotalProducto, ReceiptDetail.TotalDiscount AS DescuentoTotal
 	FROM tblReceipt AS Receipt
 		INNER JOIN tblReceiptDetail AS ReceiptDetail ON Receipt.ReceiptId = ReceiptDetail.ReceiptId

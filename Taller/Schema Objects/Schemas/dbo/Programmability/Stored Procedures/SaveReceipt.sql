@@ -16,8 +16,15 @@ BEGIN
 		IF @@ROWCOUNT > 0
 		BEGIN
 			INSERT INTO tblReceiptDetail (ReceiptId, QuotationId, ProductQuotationId, OriginalQuantity, QuantityPending, UnitValue, TotalValue, TotalDiscount)
-			SELECT @ReceiptId, ProductosCotizacion.IdCotizacion, ProductosCotizacion.IdProductoCotizacion, ProductosCotizacion.Cantidad, ProductosCotizacion.CantidadPendiente,
-			ProductosCotizacion.ValorUnitario, ProductosCotizacion.TotalProducto, ProductosCotizacion.DescuentoTotal
+			SELECT
+			@ReceiptId, 
+			ProductosCotizacion.IdCotizacion,
+			ProductosCotizacion.IdProductoCotizacion,
+			ISNULL(ProductosCotizacion.CantidadPendiente,ProductosCotizacion.Cantidad),
+			NULL,
+			ProductosCotizacion.ValorUnitario, 
+			IIF(ProductosCotizacion.CantidadPendiente IS NOT NULL,(ProductosCotizacion.CantidadPendiente*ProductosCotizacion.ValorUnitario),ProductosCotizacion.TotalProducto), 
+			ProductosCotizacion.DescuentoTotal
 			FROM [dbo].[tblProductosCotizacion]  AS ProductosCotizacion
 			INNER JOIN #ProductQuotation AS tempProductQuotation ON ProductosCotizacion.IdProductoCotizacion = tempProductQuotation.ProductQuotationId
 		END
